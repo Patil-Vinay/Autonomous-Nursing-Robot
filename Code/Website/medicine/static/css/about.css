@@ -1,0 +1,21 @@
+.about-section {
+    margin: 30px 40px;
+    padding: 0;
+}
+
+.heading {
+    text-align: center;
+    margin: 20px;
+}
+
+.paragraph {
+    margin: 15px 0;
+}
+
+@media only screen and (min-width: 900px) {
+    .about-section {
+        margin: 30px auto;
+        max-width: 850px;
+        padding: 0 40px;
+    }
+}

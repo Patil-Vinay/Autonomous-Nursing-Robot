@@ -1,0 +1,23 @@
+.container {
+    text-align: center;
+    max-width: 700px;
+    height: 500px;
+}
+
+.join_img {
+    display: block;
+    margin: 20px auto;
+    width: 100%;
+    border-radius: 250px;
+}
+
+.join-btn {
+    border: none;
+    background-color: #0A9D2B;
+    padding: 15px;
+    border-radius: 6px;
+    width: 150px;
+    cursor: pointer;
+    color: #fff;
+    margin-top: 20px;
+}

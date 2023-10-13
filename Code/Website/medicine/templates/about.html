@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Scobo{% endblock %}
+{% block styles %}
+    <link href="{% static 'css/about.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="heading">
+        <h1>SCOBO: Revolutionizing Healthcare with Robotics and AI</h1>
+    </div>
+    <section class="about-section">
+        <h3>Abstract</h3>
+        <p>Scobo is an advanced Robot designed to revolutionize the Healthcare industry. It is developed by the Rotonity Club to ease the workload of doctors and enhance patient-care through cutting-edge technology. It is equiped with a sophisticated Pill Dispensing System which streamlines medication management, ensuring patients receive their prescribed medications accurately and on time. With a simple click of a button from the doctor's interface, Scobo dispenses the necessary pills, removing the potential for errors and increasing medication adherence. With its Video Chat functionality, Scobo enables doctors to conduct live consultations with patients regardless of their physical location bridging geographical barriers.</p>
+    </section>
+    <section class="about-section">
+        <h3>Introduction</h3>
+        <p>In today's fast-paced world, healthcare professionals face numerous challenges, including high patient volumes, limited time, geographical barrier and medication errors. However, Imagine a world where distance and limited access to healthcare no longer hinder the delivery of essential medical services. Picture a scenario where doctors can seamlessly connect with patients in remote areas, providing timely diagnoses, expert advice, and personalized care without the constraints of physical proximity.</p>
+        <p>Introducing Scobo, an advanced and revolutionary robot designed to transform healthcare and doctor-patient experience. Scobo serves as a game-changing solution that addresses the limitations of traditional healthcare delivery. With its advanced capabilities, Scobo enables doctors to conduct live, interactive consultations with patients from any part of the world. Through a web-based interface, doctors can remotely assess symptoms, discuss treatment plans, and provide medical expertise in real-time. Moreover, Scobo boasts a sophisticated pill dispensing system that optimizes medication management. Through seamless integration with an online interface, doctors can remotely prescribe medications and trigger Scobo to dispense them accurately. This eliminates the risk of errors and enhances medication adherence, promoting better patient outcomes and improving overall healthcare efficiency. With its seamless connectivity, advanced medication dispensing, and the potential for autonomous interaction, Scobo exemplifies the future of healthcare.</p>
+        <p>Looking towards the future, Scobo aims to evolve into an autonomous and interactive companion for patients. By incorporating advanced robotics and artificial intelligence, Scobo will navigate effortlessly through hospital corridors, bringing care directly to patients' bedsides. Its autonomous movement will enable it to assist with basic tasks, such as taking vital signs, providing comfort, and delivering important information.</p>
+    </section>
+    <section class="about-section">
+        <h3>Working</h3>
+        <p>At the heart of its operation is a Django backend, serving as the backbone for connecting Scobo to the internet and enabling smooth communication between the robot and its web-based interface.</p>
+        <p>The user interface is a dynamic website hosted online, accessible to doctors from any device with an internet connection. Through this intuitive interface, doctors can effortlessly interact with Scobo, remotely managing patient consultations and medication dispensing. By selecting the desired medicine and dosage on the website, doctors initiate actions that prompt Scobo to take appropriate measures.</p>
+        <p>To execute the physical actions triggered by the website, Scobo relies on a NodeMCU, a powerful microcontroller embedded within the robot. This compact yet capable device acts as the intermediary, receiving instructions from the website and transmitting them to the mechanical components of Scobo.</p>
+        <p>The mechanical aspect of Scobo is intricately designed to accommodate its pill dispensing system. As the NodeMCU receives the medication details from the website, it activates servo motors integrated into Scobo's structure. These servo motors, operating under the precise instructions of the NodeMCU, engage the necessary mechanisms to open the passage for the pill to be dispensed.</p>
+        <p>With this synchronized collaboration between the Django backend, the web-based interface, the NodeMCU, and the mechanical components, Scobo ensures accurate and controlled pill dispensing. This technology-driven process guarantees that the prescribed medications are administered to patients with precision, eliminating the possibility of errors and enhancing medication adherence.</p>
+    </section>
+    <section class="about-section">
+        <h3>Benefits and Impact</h3>
+        <p>SCOBO offers several benefits that contribute to enhanced patient care and streamlined healthcare processes:</p>
+        <ol>
+            <li><p><b>Improved Medication Adherence:</b> By automating the pill dispensing process, SCOBO reduces the risk of medication errors and improves medication adherence. Patients receive the correct dosages at the prescribed times, ensuring they follow their treatment plans accurately.</p></li>
+            <li><p><b>Time Efficiency for Healthcare Professionals:</b> With SCOBO handling pill dispensing, healthcare professionals can dedicate more time to other critical tasks, such as diagnosis, treatment, and patient counselling. This optimization of healthcare resources allows doctors and nurses to focus on providing comprehensive care to their patients.</p></li>
+            <li><p><b>Enhanced Patient-Doctor Interaction:</b> The video call feature enables remote consultations, facilitating convenient access to healthcare services. Patients can receive medical advice, discuss concerns, and seek clarifications from doctors without the need for physical appointments, thereby reducing travel time and costs.</p></li>
+            <li><p><b>Reduced Healthcare Costs:</b> By automating the pill dispensing process and optimizing workflow, SCOBO helps minimize medication errors and associated healthcare costs. It also reduces the burden on healthcare facilities, enabling efficient utilization of resources and improving overall cost-effectiveness.</p></li>
+        </ol>
+    </section>
+    <section class="about-section">
+        <h3>Conclusion</h3>
+        <p>In conclusion, Scobo, the remarkable robot developed by Rotonity Club, represents a significant leap forward in healthcare technology. By seamlessly integrating advanced technologies, Scobo revolutionizes the doctor-patient relationship and addresses critical challenges in healthcare delivery. With its ability to enable live, interactive consultations between doctors and patients, regardless of distance, Scobo breaks down geographical barriers and ensures that medical expertise is accessible to all. Furthermore, its sophisticated pill dispensing system enhances medication management, promoting patient safety and adherence. Scobo's potential to become an autonomous companion holds promise for future advancements in patient care. With Scobo, Rotonity Club has not only envisioned but brought to life a transformative solution that reshapes the healthcare landscape, making it more accessible, efficient, and patient-centric. As we look ahead, Scobo represents the future of healthcare, where technology and innovation converge to deliver superior medical experiences, empower healthcare professionals, and improve patient outcomes.
+    </section>
+</main>
+{% endblock %}

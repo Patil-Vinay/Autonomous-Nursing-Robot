@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block styles %}
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="map-section">
+        <h2>Map</h2>
+        <div class="map">
+            <img class="image-placeholder" src="{% static 'assets/CONTROLLER.png' %}">
+        </div>
+    </div>
+    <div class="controls-section">
+        <h2>Controls</h2>
+        <div class="controls-switch">
+            <input type="checkbox" id="controlsToggle">
+            <label for="controlsToggle">
+                <span class="toggle-active" id="automaticToggle">Automatic</span>
+                <span id="manualToggle">Manual</span>
+            </label>
+        </div>
+        <div class="automatic-controls">
+            <label for="bedNo">Select Bed No.</label>
+            <select id="bedNo" class="input-field">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+            </select>
+
+            <div class="patient-info">
+                <h2>Patient Info</h2>
+                <span>Name: </span>
+                <span>Age: </span>
+                <span>Bed: </span>
+                <span>Body Temp: </span>
+                <span>Heart Rate: </span>
+            </div>
+        </div>
+        <div class="manual-controls">
+            <div class="buttons">
+                <div class="row">
+                    <button type="button">W</button>
+                </div>
+                <div class="row">
+                    <button type="button">A</button>
+                    <button type="button">S</button>
+                    <button type="button">D</button>
+                </div>
+            </div>
+            <div class="joystick-container">
+                <canvas id="joystick">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/controls_movement.js' %}">
+</script>
+{% endblock %}

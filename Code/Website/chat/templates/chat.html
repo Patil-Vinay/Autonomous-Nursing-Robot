@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Video Chat {% endblock %}
+{% block styles %}
+    <link href="{% static 'css/chat.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="remote-video" id="remoteVideoContainer">
+        <span class="user-name">Person 1</span>
+    </div>
+    <div class="local-video" id="localVideoContainer">
+        <span class="user-name">You</span>
+    </div>
+    <div class="call-controls">
+        <div class="call-controls__buttons">
+            <button id="muteAudio" type="button"><img class="button-icon" src="{% static 'assets/mute.svg' %}" alt="mute" ></button>
+            <button id="muteVideo" type="button"><img class="button-icon" src="{% static 'assets/video_off.svg' %}" alt="Mute Video"></button>
+            <button id="hangUp" type="button"><img class="button-icon" src="{% static 'assets/hang.svg' %}" alt="Hang Up"></button>
+        </div>
+    </div>
+    <div class="movement-controls">
+        <div class="movement-message">
+            <p id="movementMsg">Camera Movement</p>
+        </div>
+        <div class="row">
+            <button id="tiltUpBtn" type="button"><img class="button-icon" src="{% static 'assets/arrow_up.svg' %}" alt="up" ></button>
+        </div>
+        <div class="row">
+            <button id="rotateLeftBtn" type="button"><img class="button-icon" src="{% static 'assets/rotate_left.svg' %}" alt="left" ></button>
+            <button id="resetBtn" type="button"  style="border-radius: 50%; width: 40px; height: 40px"><span class="button-text">R</span></button>
+            <button id="rotateRightBtn" type="button"><img class="button-icon" src="{% static 'assets/rotate_right.svg' %}" alt="right" ></button>
+        </div>
+        <div class="row">
+            <button id="tiltDownBtn" type="button"><img class="button-icon" src="{% static 'assets/arrow_down.svg' %}" alt="down" ></button>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var csrftoken = '{{ csrf_token }}';
+</script>
+<script src="{% static 'assets/AgoraRTC_N-4.17.2.js' %}"></script>
+<script src="{% static 'js/stream.js' %}"></script>
+<script src="{% static 'js/cam_movements.js' %}"></script>
+{% endblock %}

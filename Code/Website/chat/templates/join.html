@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Video Chat{% endblock %}
+{% block styles %}
+    <link href="{% static 'css/video_chat_join.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <h1>Live Interaction</h1>
+        <img class="join_img" src="{% static 'assets/video_join_bg.jpg' %}">
+        <button class="join-btn" id="joinBtn">JOIN</button>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const joinBtn = document.getElementById('joinBtn')
+
+    joinBtn.addEventListener('click', async () => {
+        let response = await fetch('/get_token/')
+        let data = await response.json()
+        let token = data.token
+        let uid = data.uid
+
+        sessionStorage.setItem('uid', uid)
+        sessionStorage.setItem('token', token)
+
+        window.open('/chat/', '_self')
+        }
+    )
+</script>
+{% endblock %}

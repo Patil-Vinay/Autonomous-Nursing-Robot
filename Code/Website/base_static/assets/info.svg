@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1080" height="1080" viewBox="0 0 1080 1080" xml:space="preserve">
+<desc>Created with Fabric.js 5.2.4</desc>
+<defs>
+</defs>
+<g transform="matrix(1 0 0 1 540 540)" id="06c76ff8-db0e-4e15-b228-86261dfe7413"  >
+<rect style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; visibility: hidden;" vector-effect="non-scaling-stroke"  x="-540" y="-540" rx="0" ry="0" width="1080" height="1080" />
+</g>
+<g transform="matrix(1 0 0 1 540 540)" id="63a45f36-b733-4e77-a645-be63a4acec7f"  >
+</g>
+<g transform="matrix(1 0 0 1 540 540)" id="b89231fe-3fd8-4522-b75d-58d527a446b7"  >
+<path style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-480, 480)" d="M 453 -280 L 513 -280 L 513 -520 L 453 -520 L 453 -280 Z M 479.98199999999997 -594 Q 494 -594 503.5 -603.2 Q 513 -612.4000000000001 513 -626 Q 513 -640.45 503.51800000000003 -650.225 Q 494.035 -660 480.01800000000003 -660 Q 466 -660 456.5 -650.225 Q 447 -640.45 447 -626 Q 447 -612.4 456.48199999999997 -603.2 Q 465.965 -594 479.98199999999997 -594 Z M 480.26599999999996 -80 Q 397.532 -80 324.76599999999996 -111.5 Q 251.99999999999994 -143 197.49999999999994 -197.5 Q 142.99999999999994 -252 111.49999999999994 -324.841 Q 80 -397.681 80 -480.5 Q 80 -563.319 111.5 -636.159 Q 143 -709 197.5 -763 Q 252 -817 324.841 -848.5 Q 397.681 -880 480.5 -880 Q 563.319 -880 636.159 -848.5 Q 709 -817 763 -763 Q 817 -709 848.5 -636 Q 880 -563 880 -480.266 Q 880 -397.53200000000004 848.5 -324.766 Q 817 -252 763 -197.684 Q 709 -143.368 636 -111.684 Q 563 -80 480.266 -80 Z M 480.49999999999994 -140 Q 622 -140 721 -239.5 Q 820 -339 820 -480.5 Q 820 -622 721.188 -721 Q 622.375 -820 480 -820 Q 339 -820 239.5 -721.188 Q 140 -622.375 140 -480 Q 140 -339 239.5 -239.5 Q 339 -140 480.5 -140 Z M 479.99999999999994 -480 Z" stroke-linecap="round" />
+</g>
+</svg>
