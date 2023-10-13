@@ -1,0 +1,116 @@
+.remote-video {
+    position: relative;
+    height: 50vh;
+    background-color: #303030;
+    overflow: hidden;
+}
+
+.local-video {
+    position: relative;
+    height: 50vh;
+    background-color: #303030;
+    border: 1px solid white;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.movement-controls {
+    position: fixed;
+    top: 15px;
+    width: fit-content;
+    right: 15px;
+    z-index: 15;
+}
+
+.movement-controls .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+}
+
+.movement-controls button {
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.movement-message {
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(123,128,129,0.3) 32%, rgba(13,31,35,0.9) 100%);
+    border-radius: 5px;
+    padding: 4px 8px 4px 10px;
+    font-size: 13px;
+    font-weight: 300;
+    text-align: right;
+    margin-bottom: 8px;
+    color: #fff;
+    width: 150px;
+}
+
+@media only screen and (min-width: 600px) {
+    .remote-video {
+        height: 100vh;
+    }
+    .local-video {
+        position: absolute;
+        top: 75px;
+        right: 15px;
+        height: 200px;
+        width: 300px;
+        border-radius: 12px;
+    }
+    .movement-controls {
+        top: unset;
+        bottom: 15px;
+    }
+}
+
+.user-name {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 6px;
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid #fff;
+    border-radius: 6px;
+    color: #fff;
+    z-index: 10;
+}
+
+.call-controls {
+    position: fixed;
+    bottom: 15px;
+    width: 100%;
+    z-index: 11;
+}
+
+.call-controls__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    transform: translateX(-35px);
+}
+
+.call-controls__buttons button {
+    border: none;
+    border-radius: 30px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #BcBbB8;
+    box-shadow: 0 0 4px 4px rgba(0,0,0,0.1);
+}
+
+.button-icon {
+    width: 32px;
+    -webkit-pointer-events: none;
+    pointer-events: none;
+}
+
+.button-text {
+    user-select: none;
+}
+
+#hangUp {
+    background-color: rgb(236, 39, 39);
+}

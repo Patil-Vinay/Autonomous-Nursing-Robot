@@ -1,0 +1,108 @@
+main {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 60px);
+    color: #303030;
+}
+
+.map-section {
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.map {
+    margin-top: 20px;
+}
+
+.image-placeholder {
+    width: 100%;
+    border: 5px solid rgba(0,0,0,0.8);
+    max-height: 300px;
+}
+
+.controls-section {
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(240,240,240,0.5);
+}
+
+.controls-section .row {
+    justify-content: center;
+}
+
+.buttons {
+    width: 50%;
+}
+
+.joystick {
+    width: 50%;
+}
+
+.controls-switch {
+    margin: 15px auto;
+    border: 1px solid #303030;
+    padding: 12px 5px;
+    width: fit-content;
+    border-radius: 25px;
+    background-color: #fff;
+}
+
+.toggle-active {
+    background-color: #303030;
+    color: #fff;
+    padding: 8px;
+    border-radius: 20px;
+}
+
+#controlsToggle {
+    display: none;
+}
+
+.manual-controls {
+    display: none;
+    margin-top: 50px;
+    align-items: center;
+}
+
+.manual-controls button {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.joystick-container {
+    width: 50%;
+}
+
+#joystick {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: #e7e7e7;
+    border: 2px solid #ccc;
+}
+
+@media only screen and (max-width: 800px) {
+    main {
+        flex-direction: column;
+    }
+    .map-section {
+        height: 100%;
+    }
+    .controls-section {
+        height: 100%;
+    }
+}
+
+.input-field {
+    display: block;
+    padding: 10px;
+    border-radius: 6px;
+    width: 250px;
+    border: 1px solid rgba(0,0,0,0.3);
+    margin: 10px auto;
+}
