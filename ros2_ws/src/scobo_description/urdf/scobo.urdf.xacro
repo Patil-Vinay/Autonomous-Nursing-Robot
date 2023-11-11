@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+<robot name="scobo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find scobo_description)/urdf/inertial.xacro"/>
+
+  <!-- dimensions from cad/scobo/scobo_final.step, meshes from scripts/export_meshes.py.
+       base_link is on the floor under the centre of the wheels. -->
+  <xacro:arg name="mesh_dir" default="package://scobo_description/meshes"/>
+  <xacro:property name="mesh_dir" value="$(arg mesh_dir)"/>
+
+  <xacro:property name="robot_mass" value="25.0"/>
+
+  <!-- PG36M555 wheels, 4WD skid steer -->
+  <xacro:property name="wheel_radius" value="0.0482"/>
+  <xacro:property name="wheel_width" value="0.0344"/>
+  <xacro:property name="wheel_x" value="0.1338"/>    <!-- half wheelbase -->
+  <xacro:property name="wheel_y" value="0.1419"/>    <!-- half track -->
+  <xacro:property name="wheel_mass" value="0.3"/>
+  <!-- gear motor output, 2.4 Nm at 50 RPM -->
+  <xacro:property name="wheel_max_torque" value="2.4"/>
+  <xacro:property name="wheel_max_speed" value="${50 * 2 * pi / 60}"/>
+
+  <!-- lower body shell, the lidar scans through the gap above it -->
+  <xacro:property name="body_x_min" value="-0.2675"/>
+  <xacro:property name="body_x_max" value="0.2671"/>
+  <xacro:property name="body_width" value="0.530"/>
+  <xacro:property name="body_z_min" value="0.0528"/>
+  <xacro:property name="body_z_max" value="0.6298"/>
+  <xacro:property name="plate_z_min" value="0.6528"/>
+  <xacro:property name="plate_z_max" value="0.6808"/>
+
+  <!-- rear posts and top beam of the upper frame -->
+  <xacro:property name="frame_rear_x" value="-0.2475"/>
+  <xacro:property name="frame_top_z" value="1.1028"/>
+
+  <!-- RPLidar A1 scan centre, on the front bracket -->
+  <xacro:property name="laser_x" value="0.3028"/>
+  <xacro:property name="laser_z" value="0.641"/>
+
+  <!-- pan axis on the pan-tilt plate, tilt axis through the MG995 horns -->
+  <xacro:property name="pan_x" value="-0.2448"/>
+  <xacro:property name="pan_z" value="1.1132"/>
+  <xacro:property name="tilt_dx" value="-0.0025"/>
+  <xacro:property name="tilt_dz" value="0.1364"/>
+
+  <!-- iPad and its holder from the tilt axis -->
+  <xacro:property name="holder_dx" value="0.0183"/>
+  <xacro:property name="holder_dz" value="0.0134"/>
+  <xacro:property name="holder_size" value="0.014 0.242 0.186"/>
+  <xacro:property name="screen_top_dz" value="0.0992"/>
+
+  <!-- estimated split of the 25 kg, the lower body gets the rest -->
+  <xacro:property name="upper_mass" value="5.0"/>
+  <xacro:property name="pan_mass" value="0.3"/>
+  <xacro:property name="display_mass" value="0.6"/>
+  <xacro:property name="laser_mass" value="0.17"/>
+  <xacro:property name="sensor_mass" value="0.03"/>
+  <xacro:property name="pill_servo_mass" value="0.009"/>
+  <xacro:property name="tilt_servo_mass" value="0.055"/>
+  <xacro:property name="body_mass"
+    value="${robot_mass - 4*wheel_mass - upper_mass - pan_mass - display_mass - laser_mass
+            - 5*sensor_mass - 3*pill_servo_mass - 2*tilt_servo_mass}"/>
+
+  <!-- for the boxes, the meshes have their own colours -->
+  <material name="sensor_black"><color rgba="0.2 0.2 0.2 1"/></material>
+  <material name="uv_violet"><color rgba="0.55 0.25 1.0 1"/></material>
+
+  <link name="base_footprint"/>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- body shell, plates, motors, e-stop, HC-SR04 and the MAX30102 on its platform -->
+  <link name="base_link">
+    <visual>
+      <geometry><mesh filename="${mesh_dir}/lower_body.dae"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="${(body_x_min + body_x_max) / 2} 0 ${(body_z_min + body_z_max) / 2}"/>
+      <geometry>
+        <box size="${body_x_max - body_x_min} ${body_width} ${body_z_max - body_z_min}"/>
+      </geometry>
+    </collision>
+    <xacro:box_inertial m="${body_mass}" x="${body_x_max - body_x_min}" y="${body_width}"
+                        z="${body_z_max - body_z_min}">
+      <origin xyz="${(body_x_min + body_x_max) / 2} 0 ${(body_z_min + body_z_max) / 2}"/>
+    </xacro:box_inertial>
+  </link>
+
+  <!-- upper frame with the thermal camera, signal lights and pill dispenser -->
+  <joint name="upper_frame_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="upper_frame"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
+  <link name="upper_frame">
+    <visual>
+      <geometry><mesh filename="${mesh_dir}/upper_frame.dae"/></geometry>
+    </visual>
+    <!-- top plate, rear posts and top beam -->
+    <collision>
+      <origin xyz="${(body_x_min + body_x_max) / 2} 0 ${(plate_z_min + plate_z_max) / 2}"/>
+      <geometry>
+        <box size="${body_x_max - body_x_min} ${body_width} ${plate_z_max - plate_z_min}"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="${frame_rear_x} 0 ${(plate_z_max + frame_top_z) / 2}"/>
+      <geometry><box size="0.04 ${body_width} ${frame_top_z - plate_z_max}"/></geometry>
+    </collision>
+    <xacro:box_inertial m="${upper_mass}" x="0.5" y="${body_width}" z="0.45">
+      <origin xyz="-0.05 0 0.84"/>
+    </xacro:box_inertial>
+  </link>
+
+  <!-- SG30 pill servos, numbered from the right as in the CAD -->
+  <xacro:macro name="servo" params="name parent mesh mass xyz yaw:=0">
+    <joint name="${name}_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${name}"/>
+      <origin xyz="${xyz}"/>
+    </joint>
+    <link name="${name}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 ${yaw}"/>
+        <geometry><mesh filename="${mesh_dir}/${mesh}.dae"/></geometry>
+      </visual>
+      <xacro:point_inertial m="${mass}"/>
+    </link>
+  </xacro:macro>
+
+  <xacro:servo name="pill_servo_1" parent="upper_frame" mesh="sg30" mass="${pill_servo_mass}"
+               xyz="-0.0434 -0.1245 0.8639"/>
+  <xacro:servo name="pill_servo_2" parent="upper_frame" mesh="sg30" mass="${pill_servo_mass}"
+               xyz="-0.0434 0 0.8723"/>
+  <xacro:servo name="pill_servo_3" parent="upper_frame" mesh="sg30" mass="${pill_servo_mass}"
+               xyz="-0.0434 0.1313 0.8783"/>
+
+  <!-- all wheels turn about +y, positive drives forward -->
+  <xacro:macro name="wheel" params="name x y yaw">
+    <joint name="${name}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${name}_wheel"/>
+      <origin xyz="${x} ${y} ${wheel_radius}"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="${wheel_max_torque}" velocity="${wheel_max_speed}"/>
+    </joint>
+
+    <link name="${name}_wheel">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 ${yaw}"/>
+        <geometry><mesh filename="${mesh_dir}/wheel.dae"/></geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+      </collision>
+      <xacro:wheel_inertial m="${wheel_mass}" r="${wheel_radius}" h="${wheel_width}"/>
+    </link>
+  </xacro:macro>
+
+  <!-- the wheel mesh is a right wheel, left wheels are turned around -->
+  <xacro:wheel name="front_left" x="${wheel_x}" y="${wheel_y}" yaw="${pi}"/>
+  <xacro:wheel name="rear_left" x="${-wheel_x}" y="${wheel_y}" yaw="${pi}"/>
+  <xacro:wheel name="front_right" x="${wheel_x}" y="${-wheel_y}" yaw="0"/>
+  <xacro:wheel name="rear_right" x="${-wheel_x}" y="${-wheel_y}" yaw="0"/>
+
+  <!-- UV lamp bars under the body, visual only -->
+  <xacro:macro name="uv_lamp" params="name xyz size">
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${name}"/>
+      <origin xyz="${xyz}"/>
+    </joint>
+    <link name="${name}">
+      <visual>
+        <geometry><box size="${size}"/></geometry>
+        <material name="uv_violet"/>
+      </visual>
+    </link>
+  </xacro:macro>
+
+  <xacro:uv_lamp name="uv_lamp_front" xyz="0.2428 0.0018 0.0566" size="0.0376 0.1412 0.0518"/>
+  <xacro:uv_lamp name="uv_lamp_rear" xyz="-0.2472 0.0018 0.0566" size="0.0376 0.1412 0.0518"/>
+  <xacro:uv_lamp name="uv_lamp_left" xyz="-0.0003 0.2396 0.0566" size="0.1412 0.0376 0.0518"/>
+  <xacro:uv_lamp name="uv_lamp_right" xyz="0.0050 -0.2412 0.0566" size="0.1412 0.0376 0.0518"/>
+
+  <!-- RPLidar A1, frame origin at the scan centre -->
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser"/>
+    <origin xyz="${laser_x} 0 ${laser_z}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="laser">
+    <visual>
+      <origin xyz="${-laser_x} 0 ${-laser_z}"/>
+      <geometry><mesh filename="${mesh_dir}/laser.dae"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.016"/>
+      <geometry><cylinder radius="0.035" length="0.056"/></geometry>
+    </collision>
+    <xacro:point_inertial m="${laser_mass}"/>
+  </link>
+
+  <!-- BNO055 on the first level plate, not in the CAD -->
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0.2548"/>
+  </joint>
+
+  <link name="imu_link">
+    <visual>
+      <geometry><box size="0.027 0.020 0.004"/></geometry>
+      <material name="sensor_black"/>
+    </visual>
+    <xacro:point_inertial m="${sensor_mass}"/>
+  </link>
+
+  <!-- HC-SR04 on the rear face, looking backwards -->
+  <joint name="ultrasonic_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="ultrasonic_link"/>
+    <origin xyz="-0.2816 0.0051 0.0633" rpy="0 0 ${pi}"/>
+  </joint>
+
+  <link name="ultrasonic_link">
+    <xacro:point_inertial m="${sensor_mass}"/>
+  </link>
+
+  <!-- MAX30102, z out of the 45 deg face -->
+  <joint name="max30102_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="max30102_link"/>
+    <origin xyz="0.1330 0.2451 0.7062" rpy="0 ${pi/4} 0"/>
+  </joint>
+
+  <link name="max30102_link">
+    <xacro:point_inertial m="${sensor_mass}"/>
+  </link>
+
+  <!-- pan-tilt display, a stepper for pan and two MG995 servos for tilt -->
+  <joint name="display_pan_joint" type="revolute">
+    <parent link="upper_frame"/>
+    <child link="display_pan_link"/>
+    <origin xyz="${pan_x} 0 ${pan_z}"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="${-pi/2}" upper="${pi/2}" effort="0.4" velocity="3.0"/>
+  </joint>
+
+  <!-- turntable, yoke and the servo brackets -->
+  <link name="display_pan_link">
+    <visual>
+      <origin xyz="${-pan_x} 0 ${-pan_z}"/>
+      <geometry><mesh filename="${mesh_dir}/display_pan.dae"/></geometry>
+    </visual>
+    <xacro:point_inertial m="${pan_mass}"/>
+  </link>
+
+  <!-- MG995 tilt servos on the yoke arms -->
+  <xacro:servo name="tilt_servo_right" parent="display_pan_link" mesh="mg995"
+               mass="${tilt_servo_mass}" xyz="-0.0028 -0.1685 0.1344"/>
+  <xacro:servo name="tilt_servo_left" parent="display_pan_link" mesh="mg995"
+               mass="${tilt_servo_mass}" xyz="-0.0022 0.1626 0.1344" yaw="${pi}"/>
+
+  <joint name="display_tilt_joint" type="revolute">
+    <parent link="display_pan_link"/>
+    <child link="display_link"/>
+    <origin xyz="${tilt_dx} 0 ${tilt_dz}"/>
+    <axis xyz="0 1 0"/>
+    <!-- both MG995 together -->
+    <limit lower="${-pi/4}" upper="${pi/4}" effort="1.8" velocity="5.0"/>
+  </joint>
+
+  <!-- iPad, its holder with the clips, the tilt shaft and the servo horns -->
+  <link name="display_link">
+    <visual>
+      <origin xyz="${-(pan_x + tilt_dx)} 0 ${-(pan_z + tilt_dz)}"/>
+      <geometry><mesh filename="${mesh_dir}/display.dae"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="${holder_dx} 0 ${holder_dz}"/>
+      <geometry><box size="${holder_size}"/></geometry>
+    </collision>
+    <xacro:box_inertial m="${display_mass}" x="0.014" y="0.242" z="0.186">
+      <origin xyz="${holder_dx} 0 ${holder_dz}"/>
+    </xacro:box_inertial>
+  </link>
+
+  <!-- optical frames are z forward, x right, y down -->
+  <xacro:macro name="camera_frames" params="name parent xyz box:=false">
+    <joint name="${name}_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+      <origin xyz="${xyz}"/>
+    </joint>
+    <link name="${name}_link">
+      <xacro:if value="${box}">
+        <visual>
+          <geometry><box size="0.02 0.05 0.02"/></geometry>
+          <material name="sensor_black"/>
+        </visual>
+      </xacro:if>
+      <xacro:point_inertial m="${sensor_mass}"/>
+    </link>
+    <joint name="${name}_optical_joint" type="fixed">
+      <parent link="${name}_link"/>
+      <child link="${name}_optical_frame"/>
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+    <link name="${name}_optical_frame"/>
+  </xacro:macro>
+
+  <!-- MLX90640 thermal camera under the top beam -->
+  <xacro:camera_frames name="thermal" parent="upper_frame" xyz="-0.1778 0.002 1.0775"/>
+
+  <!-- webcam on top of the tablet holder, not in the CAD -->
+  <xacro:camera_frames name="camera" parent="display_link"
+                       xyz="0.0204 0 ${screen_top_dz + 0.01}" box="true"/>
+
+</robot>
