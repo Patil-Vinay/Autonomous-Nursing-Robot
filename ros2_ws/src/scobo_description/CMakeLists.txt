@@ -4,7 +4,7 @@ project(scobo_description)
 find_package(ament_cmake REQUIRED)
 
 install(
-  DIRECTORY meshes urdf
+  DIRECTORY launch meshes rviz urdf
   DESTINATION share/${PROJECT_NAME}
 )
 
