@@ -1,0 +1,13 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    pan_tilt_controller:
+      type: position_controllers/JointGroupPositionController
+
+pan_tilt_controller:
+  ros__parameters:
+    joints: ["display_pan_joint", "display_tilt_joint"]

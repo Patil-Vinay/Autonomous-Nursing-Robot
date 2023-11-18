@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <!-- drawer on the +x face -->
+  <model name="bedside_locker">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <pose>0 0 0.425 0 0 0</pose>
+        <geometry><box><size>0.5 0.5 0.85</size></box></geometry>
+      </collision>
+      <visual name="cabinet">
+        <pose>0 0 0.425 0 0 0</pose>
+        <geometry><box><size>0.5 0.5 0.85</size></box></geometry>
+        <material>
+          <ambient>0.85 0.82 0.75 1</ambient>
+          <diffuse>0.85 0.82 0.75 1</diffuse>
+        </material>
+      </visual>
+      <visual name="drawer">
+        <pose>0.255 0 0.72 0 0 0</pose>
+        <geometry><box><size>0.01 0.44 0.14</size></box></geometry>
+        <material>
+          <ambient>0.45 0.6 0.75 1</ambient>
+          <diffuse>0.45 0.6 0.75 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
