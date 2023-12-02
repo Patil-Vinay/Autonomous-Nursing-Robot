@@ -15,6 +15,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 def generate_launch_description():
     pkg = get_package_share_directory('scobo_gazebo')
     gazebo_ros = get_package_share_directory('gazebo_ros')
+    nav = get_package_share_directory('scobo_navigation')
     xacro_file = os.path.join(pkg, 'urdf', 'scobo_sim.urdf.xacro')
 
     world = LaunchConfiguration('world')
@@ -24,7 +25,8 @@ def generate_launch_description():
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(gazebo_ros, 'launch', 'gazebo.launch.py')),
-        launch_arguments={'world': world, 'gui': gui}.items(),
+        launch_arguments={'world': world, 'gui': gui,
+                          'params_file': os.path.join(pkg, 'config', 'gazebo.yaml')}.items(),
     )
 
     robot_state_publisher = Node(
@@ -52,6 +54,20 @@ def generate_launch_description():
         for name in ['joint_state_broadcaster', 'pan_tilt_controller']
     ]
 
+    ekf = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        parameters=[os.path.join(nav, 'config', 'ekf.yaml'), {'use_sim_time': True}],
+    )
+
+    # same values as the diff drive plugin
+    wheel_odometry = Node(
+        package='scobo_navigation',
+        executable='wheel_odometry',
+        parameters=[{'wheel_radius': 0.0482, 'wheel_separation': 0.3179, 'use_sim_time': True}],
+    )
+
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -74,5 +90,7 @@ def generate_launch_description():
         robot_state_publisher,
         spawn,
         RegisterEventHandler(OnProcessExit(target_action=spawn, on_exit=controllers)),
+        wheel_odometry,
+        ekf,
         rviz_node,
     ])

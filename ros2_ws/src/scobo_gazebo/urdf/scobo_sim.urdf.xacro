@@ -5,6 +5,7 @@
   <xacro:arg name="mesh_dir" default="file://$(find scobo_description)/meshes"/>
   <xacro:include filename="$(find scobo_description)/urdf/scobo.urdf.xacro"/>
 
+  <!-- also given to wheel_odometry in sim.launch.py -->
   <xacro:property name="wheel_radius_sim" value="0.0482"/>
   <xacro:property name="wheel_separation_sim" value="0.3179"/>
 
@@ -42,7 +43,7 @@
     </plugin>
 
     <!-- 4WD skid steer on cmd_vel, 2.4 Nm per wheel. Effective track 1.12 x 0.2838 m
-         as the wheels slip in turns -->
+         as the wheels slip in turns. Odometry comes from wheel_odometry -->
     <plugin filename="libgazebo_ros_diff_drive.so" name="diff_drive">
       <update_rate>100</update_rate>
       <num_wheel_pairs>2</num_wheel_pairs>
@@ -56,14 +57,12 @@
       <wheel_diameter>${2 * wheel_radius_sim}</wheel_diameter>
       <max_wheel_torque>2.4</max_wheel_torque>
       <max_wheel_acceleration>0.5</max_wheel_acceleration>
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_footprint</robot_base_frame>
-      <publish_odom>true</publish_odom>
-      <publish_odom_tf>true</publish_odom_tf>
+      <publish_odom>false</publish_odom>
+      <publish_odom_tf>false</publish_odom_tf>
       <publish_wheel_tf>false</publish_wheel_tf>
     </plugin>
 
-    <!-- wheel angles for robot_state_publisher -->
+    <!-- encoder angles for wheel_odometry and robot_state_publisher -->
     <plugin filename="libgazebo_ros_joint_state_publisher.so" name="wheel_states">
       <update_rate>50</update_rate>
       <joint_name>front_left_wheel_joint</joint_name>
@@ -144,6 +143,46 @@
         </ros>
         <output_type>sensor_msgs/LaserScan</output_type>
         <frame_name>laser</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- BNO055, noise from the datasheet noise densities -->
+  <xacro:macro name="imu_noise" params="stddev bias">
+    <noise type="gaussian">
+      <mean>0.0</mean>
+      <stddev>${stddev}</stddev>
+      <bias_mean>0.0</bias_mean>
+      <bias_stddev>${bias}</bias_stddev>
+    </noise>
+  </xacro:macro>
+  <xacro:property name="gyro_stddev" value="${radians(0.014) * sqrt(50)}"/>
+  <xacro:property name="gyro_bias" value="0.0003"/>
+  <xacro:property name="accel_stddev" value="${150e-6 * 9.81 * sqrt(50)}"/>
+  <xacro:property name="accel_bias" value="0.01"/>
+
+  <gazebo reference="imu_link">
+    <sensor name="bno055" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <imu>
+        <angular_velocity>
+          <x><xacro:imu_noise stddev="${gyro_stddev}" bias="${gyro_bias}"/></x>
+          <y><xacro:imu_noise stddev="${gyro_stddev}" bias="${gyro_bias}"/></y>
+          <z><xacro:imu_noise stddev="${gyro_stddev}" bias="${gyro_bias}"/></z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x><xacro:imu_noise stddev="${accel_stddev}" bias="${accel_bias}"/></x>
+          <y><xacro:imu_noise stddev="${accel_stddev}" bias="${accel_bias}"/></y>
+          <z><xacro:imu_noise stddev="${accel_stddev}" bias="${accel_bias}"/></z>
+        </linear_acceleration>
+      </imu>
+      <plugin name="bno055" filename="libgazebo_ros_imu_sensor.so">
+        <ros>
+          <remapping>~/out:=imu/data</remapping>
+        </ros>
+        <frame_name>imu_link</frame_name>
+        <initial_orientation_as_reference>false</initial_orientation_as_reference>
       </plugin>
     </sensor>
   </gazebo>

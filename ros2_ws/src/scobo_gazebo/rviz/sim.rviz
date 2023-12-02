@@ -41,7 +41,7 @@ Visualization Manager:
       Show Names: false
       Value: true
     - Class: rviz_default_plugins/Odometry
-      Name: Odometry
+      Name: Wheel Odometry
       Enabled: true
       Topic:
         Value: /odom
@@ -55,6 +55,29 @@ Visualization Manager:
       Shape:
         Value: Arrow
         Color: 255; 25; 0
+        Alpha: 1
+        Shaft Length: 0.3
+        Shaft Radius: 0.02
+        Head Length: 0.08
+        Head Radius: 0.05
+      Covariance:
+        Value: false
+      Value: true
+    - Class: rviz_default_plugins/Odometry
+      Name: EKF Odometry
+      Enabled: true
+      Topic:
+        Value: /odometry/filtered
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Keep: 200
+      Position Tolerance: 0.1
+      Angle Tolerance: 0.1
+      Shape:
+        Value: Arrow
+        Color: 0; 170; 255
         Alpha: 1
         Shaft Length: 0.3
         Shaft Radius: 0.02
