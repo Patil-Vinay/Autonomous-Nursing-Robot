@@ -86,6 +86,19 @@ Visualization Manager:
       Covariance:
         Value: false
       Value: true
+    - Class: rviz_default_plugins/Range
+      Name: Ultrasonic
+      Enabled: true
+      Topic:
+        Value: /range
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Color: 255; 200; 0
+      Alpha: 0.5
+      Buffer Length: 1
+      Value: true
     - Class: rviz_default_plugins/LaserScan
       Name: LaserScan
       Enabled: true
