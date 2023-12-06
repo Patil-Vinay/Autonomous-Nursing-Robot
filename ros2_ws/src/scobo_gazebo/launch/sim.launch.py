@@ -68,6 +68,12 @@ def generate_launch_description():
         parameters=[{'wheel_radius': 0.0482, 'wheel_separation': 0.3179, 'use_sim_time': True}],
     )
 
+    range_relay = Node(
+        package='scobo_gazebo',
+        executable='range_relay',
+        parameters=[{'use_sim_time': True}],
+    )
+
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -92,5 +98,6 @@ def generate_launch_description():
         RegisterEventHandler(OnProcessExit(target_action=spawn, on_exit=controllers)),
         wheel_odometry,
         ekf,
+        range_relay,
         rviz_node,
     ])
