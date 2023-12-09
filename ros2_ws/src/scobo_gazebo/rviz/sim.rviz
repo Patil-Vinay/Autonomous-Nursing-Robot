@@ -87,10 +87,23 @@ Visualization Manager:
         Value: false
       Value: true
     - Class: rviz_default_plugins/Range
-      Name: Ultrasonic
+      Name: Ultrasonic Rear
       Enabled: true
       Topic:
-        Value: /range
+        Value: /range/rear
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Color: 255; 200; 0
+      Alpha: 0.5
+      Buffer Length: 1
+      Value: true
+    - Class: rviz_default_plugins/Range
+      Name: Ultrasonic Front
+      Enabled: true
+      Topic:
+        Value: /range/front
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last

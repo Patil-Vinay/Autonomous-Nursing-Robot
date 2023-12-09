@@ -35,7 +35,7 @@ def generate_launch_description():
         parameters=[{'robot_description': robot_description, 'use_sim_time': True}],
     )
 
-    # start at the nurse station
+    # start at home
     spawn = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
@@ -68,11 +68,22 @@ def generate_launch_description():
         parameters=[{'wheel_radius': 0.0482, 'wheel_separation': 0.3179, 'use_sim_time': True}],
     )
 
-    range_relay = Node(
-        package='scobo_gazebo',
-        executable='range_relay',
+    gyro_bias = Node(
+        package='scobo_navigation',
+        executable='gyro_bias',
         parameters=[{'use_sim_time': True}],
     )
+
+    range_relays = [
+        Node(
+            package='scobo_gazebo',
+            executable='range_relay',
+            name=f'range_relay_{side}',
+            parameters=[{'use_sim_time': True}],
+            remappings=[('range_sim', f'range/{side}_sim'), ('range', f'range/{side}')],
+        )
+        for side in ['rear', 'front']
+    ]
 
     rviz_node = Node(
         package='rviz2',
@@ -88,8 +99,8 @@ def generate_launch_description():
         DeclareLaunchArgument('world', default_value=os.path.join(pkg, 'worlds', 'ward.world')),
         DeclareLaunchArgument('gui', default_value='true', description='Open the Gazebo client'),
         DeclareLaunchArgument('rviz', default_value='true'),
-        DeclareLaunchArgument('x', default_value='7.0'),
-        DeclareLaunchArgument('y', default_value='-1.0'),
+        DeclareLaunchArgument('x', default_value='8.4'),
+        DeclareLaunchArgument('y', default_value='-0.5'),
         DeclareLaunchArgument('yaw', default_value='3.1416'),
 
         gazebo,
@@ -97,7 +108,8 @@ def generate_launch_description():
         spawn,
         RegisterEventHandler(OnProcessExit(target_action=spawn, on_exit=controllers)),
         wheel_odometry,
+        gyro_bias,
         ekf,
-        range_relay,
+        *range_relays,
         rviz_node,
     ])

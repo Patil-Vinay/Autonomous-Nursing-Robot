@@ -224,13 +224,29 @@
   </link>
 
   <!-- HC-SR04 on the rear face, looking backwards -->
-  <joint name="ultrasonic_joint" type="fixed">
+  <joint name="ultrasonic_rear_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="ultrasonic_link"/>
+    <child link="ultrasonic_rear_link"/>
     <origin xyz="-0.2816 0.0051 0.0633" rpy="0 0 ${pi}"/>
   </joint>
 
-  <link name="ultrasonic_link">
+  <link name="ultrasonic_rear_link">
+    <xacro:point_inertial m="${sensor_mass}"/>
+  </link>
+
+  <!-- second HC-SR04 low on the front face, not in the CAD yet -->
+  <joint name="ultrasonic_front_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="ultrasonic_front_link"/>
+    <origin xyz="0.2812 0 0.0633"/>
+  </joint>
+
+  <link name="ultrasonic_front_link">
+    <visual>
+      <origin xyz="-0.0071 0 0"/>
+      <geometry><box size="0.0142 0.045 0.020"/></geometry>
+      <material name="sensor_black"/>
+    </visual>
     <xacro:point_inertial m="${sensor_mass}"/>
   </link>
 

@@ -6,3 +6,6 @@ ros2_ws/log/
 # Python
 __pycache__/
 *.pyc
+
+# Screen recordings
+docs/videos/
