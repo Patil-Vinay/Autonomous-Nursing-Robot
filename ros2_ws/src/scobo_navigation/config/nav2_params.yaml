@@ -1,0 +1,369 @@
+# Nav2 settings for the sim and the robot
+
+map_server:
+  ros__parameters:
+    # set by the launch file
+    yaml_filename: ""
+
+amcl:
+  ros__parameters:
+    global_frame_id: map
+    odom_frame_id: odom
+    base_frame_id: base_footprint
+    scan_topic: scan
+    tf_broadcast: true
+    transform_tolerance: 1.0
+
+    # odometry noise, how much each motion adds to the particle spread
+    robot_model_type: nav2_amcl::DifferentialMotionModel
+    alpha1: 0.2
+    alpha2: 0.2
+    alpha3: 0.2
+    alpha4: 0.2
+    alpha5: 0.2
+
+    # the lidar against the map
+    laser_model_type: likelihood_field
+    # A1 range, same as slam_toolbox
+    laser_min_range: 0.2
+    laser_max_range: 12.0
+    max_beams: 60
+    laser_likelihood_max_dist: 2.0
+    sigma_hit: 0.2
+    z_hit: 0.5
+    z_rand: 0.5
+    z_max: 0.05
+    z_short: 0.05
+    lambda_short: 0.1
+    do_beamskip: false
+    beam_skip_distance: 0.5
+    beam_skip_error_threshold: 0.9
+    beam_skip_threshold: 0.3
+
+    # particle filter
+    min_particles: 500
+    max_particles: 2000
+    pf_err: 0.05
+    pf_z: 0.99
+    resample_interval: 1
+    # add random particles when the scans stop matching
+    recovery_alpha_slow: 0.001
+    recovery_alpha_fast: 0.1
+    # SCOBO is slow, so update after shorter moves than the 0.25 m / 0.2 rad default
+    update_min_d: 0.15
+    update_min_a: 0.15
+    save_pose_rate: 0.5
+
+    # the robot starts at home (beds.yaml)
+    set_initial_pose: true
+    initial_pose:
+      x: -1.4
+      y: -0.5
+      z: 0.0
+      yaw: 0.0
+    always_reset_initial_pose: false
+
+bt_navigator:
+  ros__parameters:
+    global_frame: map
+    robot_base_frame: base_footprint
+    odom_topic: /odometry/filtered
+    bt_loop_duration: 10
+    default_server_timeout: 20
+    # the tree comes from navigation.launch.py: replan when the path is blocked,
+    # recover with clear costmaps, spin, wait and back up
+    plugin_lib_names:
+      - nav2_compute_path_to_pose_action_bt_node
+      - nav2_compute_path_through_poses_action_bt_node
+      - nav2_smooth_path_action_bt_node
+      - nav2_follow_path_action_bt_node
+      - nav2_spin_action_bt_node
+      - nav2_wait_action_bt_node
+      - nav2_assisted_teleop_action_bt_node
+      - nav2_back_up_action_bt_node
+      - nav2_drive_on_heading_bt_node
+      - nav2_clear_costmap_service_bt_node
+      - nav2_is_stuck_condition_bt_node
+      - nav2_goal_reached_condition_bt_node
+      - nav2_goal_updated_condition_bt_node
+      - nav2_globally_updated_goal_condition_bt_node
+      - nav2_is_path_valid_condition_bt_node
+      - nav2_initial_pose_received_condition_bt_node
+      - nav2_reinitialize_global_localization_service_bt_node
+      - nav2_rate_controller_bt_node
+      - nav2_distance_controller_bt_node
+      - nav2_speed_controller_bt_node
+      - nav2_truncate_path_action_bt_node
+      - nav2_truncate_path_local_action_bt_node
+      - nav2_goal_updater_node_bt_node
+      - nav2_recovery_node_bt_node
+      - nav2_pipeline_sequence_bt_node
+      - nav2_round_robin_node_bt_node
+      - nav2_transform_available_condition_bt_node
+      - nav2_time_expired_condition_bt_node
+      - nav2_path_expiring_timer_condition
+      - nav2_distance_traveled_condition_bt_node
+      - nav2_single_trigger_bt_node
+      - nav2_goal_updated_controller_bt_node
+      - nav2_is_battery_low_condition_bt_node
+      - nav2_navigate_through_poses_action_bt_node
+      - nav2_navigate_to_pose_action_bt_node
+      - nav2_remove_passed_goals_action_bt_node
+      - nav2_planner_selector_bt_node
+      - nav2_controller_selector_bt_node
+      - nav2_goal_checker_selector_bt_node
+      - nav2_controller_cancel_bt_node
+      - nav2_path_longer_on_approach_bt_node
+      - nav2_wait_cancel_bt_node
+      - nav2_spin_cancel_bt_node
+      - nav2_back_up_cancel_bt_node
+      - nav2_assisted_teleop_cancel_bt_node
+      - nav2_drive_on_heading_cancel_bt_node
+      - nav2_is_battery_charging_condition_bt_node
+
+planner_server:
+  ros__parameters:
+    expected_planner_frequency: 20.0
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: nav2_smac_planner/SmacPlanner2D
+      tolerance: 0.15
+      downsample_costmap: false
+      downsampling_factor: 1
+      # never plan through cells the map has not seen, like the inside of a bed
+      allow_unknown: false
+      max_iterations: 1000000
+      max_on_approach_iterations: 1000
+      max_planning_time: 2.0
+      # higher keeps the path in the middle of the aisle, away from beds
+      cost_travel_multiplier: 2.0
+      use_final_approach_orientation: false
+
+controller_server:
+  ros__parameters:
+    controller_frequency: 20.0
+    odom_topic: /odometry/filtered
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.5
+    min_theta_velocity_threshold: 0.001
+    failure_tolerance: 0.3
+    progress_checker_plugin: progress_checker
+    goal_checker_plugins: ["general_goal_checker"]
+    controller_plugins: ["FollowPath"]
+
+    # turning on the spot moves the robot very little, so allow time for it
+    progress_checker:
+      plugin: nav2_controller::SimpleProgressChecker
+      required_movement_radius: 0.25
+      movement_time_allowance: 15.0
+    # stop within 5 cm and 5.7 degrees of a bed pose
+    general_goal_checker:
+      plugin: nav2_controller::SimpleGoalChecker
+      xy_goal_tolerance: 0.05
+      yaw_goal_tolerance: 0.10
+      stateful: true
+
+    # turn on the spot to face the path first, then hand over to pure pursuit
+    FollowPath:
+      plugin: nav2_rotation_shim_controller::RotationShimController
+      primary_controller: nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+      angular_dist_threshold: 0.785
+      forward_sampling_distance: 0.5
+      rotate_to_heading_angular_vel: 0.6
+      max_angular_accel: 1.5
+      simulate_ahead_time: 1.0
+
+      # pure pursuit, the 50 RPM wheels top out at 0.25 m/s
+      desired_linear_vel: 0.2
+      lookahead_dist: 0.5
+      min_lookahead_dist: 0.3
+      max_lookahead_dist: 0.8
+      lookahead_time: 1.5
+      use_velocity_scaled_lookahead_dist: false
+      transform_tolerance: 0.2
+      min_approach_linear_velocity: 0.05
+      approach_velocity_scaling_dist: 0.5
+      use_collision_detection: true
+      max_allowed_time_to_collision_up_to_carrot: 1.0
+      # slow down in tight turns and near obstacles
+      use_regulated_linear_velocity_scaling: true
+      use_cost_regulated_linear_velocity_scaling: true
+      regulated_linear_scaling_min_radius: 0.9
+      regulated_linear_scaling_min_speed: 0.1
+      cost_scaling_dist: 0.6
+      cost_scaling_gain: 1.0
+      inflation_cost_scaling_factor: 3.0
+      # turn on the spot to the goal heading at the end, never drive backwards
+      use_rotate_to_heading: true
+      rotate_to_heading_min_angle: 0.785
+      allow_reversing: false
+      max_robot_pose_search_dist: 10.0
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      global_frame: odom
+      robot_base_frame: base_footprint
+      rolling_window: true
+      width: 4
+      height: 4
+      resolution: 0.05
+      # body 0.535 x 0.53 m, the lidar sticks out 7 cm at the front
+      footprint: "[[0.27, 0.27], [0.27, 0.04], [0.34, 0.04], [0.34, -0.04], [0.27, -0.04], [0.27, -0.27], [-0.27, -0.27], [-0.27, 0.27]]"
+      footprint_padding: 0.02
+      plugins: ["obstacle_layer", "range_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: nav2_costmap_2d::ObstacleLayer
+        enabled: true
+        observation_sources: scan
+        scan:
+          topic: /scan
+          data_type: LaserScan
+          marking: true
+          clearing: true
+          max_obstacle_height: 2.0
+          obstacle_max_range: 3.0
+          raytrace_max_range: 4.0
+          # no return means free space up to the range limit
+          inf_is_valid: true
+      # both HC-SR04s
+      range_layer:
+        plugin: nav2_costmap_2d::RangeSensorLayer
+        enabled: true
+        topics: ["/range/rear", "/range/front"]
+        input_sensor_type: VARIABLE
+        clear_on_max_reading: true
+        phi: 1.2
+        inflate_cone: 1.0
+        clear_threshold: 0.2
+        mark_threshold: 0.8
+        no_readings_timeout: 2.0
+      inflation_layer:
+        plugin: nav2_costmap_2d::InflationLayer
+        inflation_radius: 0.45
+        cost_scaling_factor: 3.0
+      always_send_full_costmap: true
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 1.0
+      publish_frequency: 1.0
+      global_frame: map
+      robot_base_frame: base_footprint
+      resolution: 0.05
+      track_unknown_space: true
+      footprint: "[[0.27, 0.27], [0.27, 0.04], [0.34, 0.04], [0.34, -0.04], [0.27, -0.04], [0.27, -0.27], [-0.27, -0.27], [-0.27, 0.27]]"
+      footprint_padding: 0.02
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: nav2_costmap_2d::StaticLayer
+        map_subscribe_transient_local: true
+      obstacle_layer:
+        plugin: nav2_costmap_2d::ObstacleLayer
+        enabled: true
+        observation_sources: scan
+        scan:
+          topic: /scan
+          data_type: LaserScan
+          marking: true
+          clearing: true
+          max_obstacle_height: 2.0
+          obstacle_max_range: 3.0
+          raytrace_max_range: 4.0
+          inf_is_valid: true
+      # wider than local so the planned path keeps clear of beds
+      inflation_layer:
+        plugin: nav2_costmap_2d::InflationLayer
+        inflation_radius: 0.6
+        cost_scaling_factor: 3.0
+      always_send_full_costmap: true
+
+behavior_server:
+  ros__parameters:
+    costmap_topic: local_costmap/costmap_raw
+    footprint_topic: local_costmap/published_footprint
+    cycle_frequency: 10.0
+    # back up checks the local costmap, where only the ultrasonic sees behind
+    behavior_plugins: ["spin", "backup", "wait"]
+    spin:
+      plugin: nav2_behaviors/Spin
+    backup:
+      plugin: nav2_behaviors/BackUp
+    wait:
+      plugin: nav2_behaviors/Wait
+    global_frame: odom
+    robot_base_frame: base_footprint
+    transform_tolerance: 0.1
+    simulate_ahead_time: 2.0
+    max_rotational_vel: 0.6
+    min_rotational_vel: 0.3
+    rotational_acc_lim: 1.5
+
+# 0.25 m/s and 1 rad/s at most
+velocity_smoother:
+  ros__parameters:
+    smoothing_frequency: 20.0
+    scale_velocities: false
+    feedback: OPEN_LOOP
+    max_velocity: [0.25, 0.0, 1.0]
+    min_velocity: [-0.25, 0.0, -1.0]
+    max_accel: [0.5, 0.0, 1.5]
+    max_decel: [-0.5, 0.0, -1.5]
+    odom_topic: /odometry/filtered
+    odom_duration: 0.1
+    deadband_velocity: [0.0, 0.0, 0.0]
+    velocity_timeout: 1.0
+
+# last check on every command before the wheels, independent of the planner
+collision_monitor:
+  ros__parameters:
+    base_frame_id: base_footprint
+    odom_frame_id: odom
+    cmd_vel_in_topic: cmd_vel_smoothed
+    cmd_vel_out_topic: cmd_vel
+    transform_tolerance: 0.5
+    source_timeout: 2.0
+    stop_pub_timeout: 2.0
+    polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
+    # circle just outside the body corners (0.38 m), the same at every heading
+    PolygonStop:
+      type: circle
+      radius: 0.40
+      action_type: stop
+      max_points: 3
+      visualize: true
+      polygon_pub_topic: polygon_stop
+    PolygonSlow:
+      type: polygon
+      points: [0.7, 0.4, 0.7, -0.4, -0.35, -0.4, -0.35, 0.4]
+      action_type: slowdown
+      max_points: 3
+      slowdown_ratio: 0.8
+      visualize: true
+      polygon_pub_topic: polygon_slowdown
+    # slow down so a collision is always at least 2 s away
+    FootprintApproach:
+      type: polygon
+      action_type: approach
+      footprint_topic: /local_costmap/published_footprint
+      time_before_collision: 2.0
+      simulation_time_step: 0.1
+      max_points: 3
+      visualize: false
+    observation_sources: ["scan", "sonar_rear", "sonar_front"]
+    scan:
+      type: scan
+      topic: /scan
+    # the only sensor behind the robot
+    sonar_rear:
+      type: range
+      topic: /range/rear
+      obstacles_angle: 0.0349
+    # low obstacles in front that pass under the lidar beam
+    sonar_front:
+      type: range
+      topic: /range/front
+      obstacles_angle: 0.0349

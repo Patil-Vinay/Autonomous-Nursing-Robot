@@ -18,8 +18,9 @@ ekf_filter_node:
                    false, false, true,
                    false, false, false]
 
-    # gyro rate only, the BNO055 runs without its magnetometer
-    imu0: /imu/data
+    # gyro rate only, the BNO055 runs without its magnetometer.
+    # gyro_bias removes the bias it learns while the robot stands still
+    imu0: /imu/data_corrected
     imu0_config: [false, false, false,
                   false, false, false,
                   false, false, false,

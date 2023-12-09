@@ -1,5 +1,4 @@
-// Republishes the simulated sonar with "no echo" as +inf (REP 117)
-#include <limits>
+// Republishes the simulated sonar with "no echo" as max_range for the Nav2 range layer
 #include <memory>
 #include <utility>
 
@@ -17,7 +16,7 @@ public:
       "range_sim", rclcpp::SensorDataQoS(),
       [this](sensor_msgs::msg::Range::UniquePtr msg) {
         if (msg->range > msg->max_range) {
-          msg->range = std::numeric_limits<float>::infinity();
+          msg->range = msg->max_range;
         }
         pub_->publish(std::move(msg));
       });
