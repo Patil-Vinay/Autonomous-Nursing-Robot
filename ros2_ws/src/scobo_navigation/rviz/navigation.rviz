@@ -164,6 +164,10 @@ Visualization Manager:
           Value: true
         base_footprint:
           Value: true
+        thermal_link:
+          Value: true
+        camera_link:
+          Value: true
       Marker Scale: 1
       Show Arrows: false
       Show Axes: true
@@ -184,6 +188,17 @@ Visualization Manager:
       Color: 0; 255; 0
       Alpha: 1
       Decay Time: 0
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Name: Thermal
+      Enabled: true
+      Topic:
+        Value: /thermal/image
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Normalize Range: true
       Value: true
   Enabled: true
   Global Options:
@@ -219,5 +234,5 @@ Visualization Manager:
       Value: TopDownOrtho (rviz_default_plugins)
     Saved: ~
 Window Geometry:
-  Height: 900
+  Height: 836
   Width: 1400

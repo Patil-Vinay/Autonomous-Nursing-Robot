@@ -4,6 +4,14 @@
        5-8 back along the south wall. -->
   <world name="ward">
 
+    <!-- entity states for the fake sensors -->
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros>
+        <namespace>/gazebo</namespace>
+      </ros>
+      <update_rate>1.0</update_rate>
+    </plugin>
+
     <physics type="ode">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1</real_time_factor>
@@ -149,6 +157,11 @@
       <pose>-4.5 2.9 0 0 0 -1.5708</pose>
     </include>
     <include>
+      <name>patient_1</name>
+      <uri>model://patient_male</uri>
+      <pose>-4.5 2.9 0 0 0 -1.5708</pose>
+    </include>
+    <include>
       <name>locker_1</name>
       <uri>model://bedside_locker</uri>
       <pose>-3.65 3.7 0 0 0 -1.5708</pose>
@@ -158,6 +171,11 @@
     <include>
       <name>bed_2</name>
       <uri>model://hospital_bed</uri>
+      <pose>-1.5 2.9 0 0 0 -1.5708</pose>
+    </include>
+    <include>
+      <name>patient_2</name>
+      <uri>model://patient_female</uri>
       <pose>-1.5 2.9 0 0 0 -1.5708</pose>
     </include>
     <include>
@@ -173,6 +191,11 @@
       <pose>1.5 2.9 0 0 0 -1.5708</pose>
     </include>
     <include>
+      <name>patient_3</name>
+      <uri>model://patient_male</uri>
+      <pose>1.5 2.9 0 0 0 -1.5708</pose>
+    </include>
+    <include>
       <name>locker_3</name>
       <uri>model://bedside_locker</uri>
       <pose>2.35 3.7 0 0 0 -1.5708</pose>
@@ -182,6 +205,11 @@
     <include>
       <name>bed_4</name>
       <uri>model://hospital_bed</uri>
+      <pose>4.5 2.9 0 0 0 -1.5708</pose>
+    </include>
+    <include>
+      <name>patient_4</name>
+      <uri>model://patient_female</uri>
       <pose>4.5 2.9 0 0 0 -1.5708</pose>
     </include>
     <include>
@@ -197,12 +225,17 @@
       <pose>4.5 -2.9 0 0 0 1.5708</pose>
     </include>
     <include>
+      <name>patient_5</name>
+      <uri>model://patient_male</uri>
+      <pose>4.5 -2.9 0 0 0 1.5708</pose>
+    </include>
+    <include>
       <name>locker_5</name>
       <uri>model://bedside_locker</uri>
       <pose>5.35 -3.7 0 0 0 1.5708</pose>
     </include>
 
-    <!-- bed 6 -->
+    <!-- bed 6, empty (patient discharged) -->
     <include>
       <name>bed_6</name>
       <uri>model://hospital_bed</uri>
@@ -221,6 +254,11 @@
       <pose>-1.5 -2.9 0 0 0 1.5708</pose>
     </include>
     <include>
+      <name>patient_7</name>
+      <uri>model://patient_female</uri>
+      <pose>-1.5 -2.9 0 0 0 1.5708</pose>
+    </include>
+    <include>
       <name>locker_7</name>
       <uri>model://bedside_locker</uri>
       <pose>-0.65 -3.7 0 0 0 1.5708</pose>
@@ -230,6 +268,11 @@
     <include>
       <name>bed_8</name>
       <uri>model://hospital_bed</uri>
+      <pose>-4.5 -2.9 0 0 0 1.5708</pose>
+    </include>
+    <include>
+      <name>patient_8</name>
+      <uri>model://patient_male</uri>
       <pose>-4.5 -2.9 0 0 0 1.5708</pose>
     </include>
     <include>

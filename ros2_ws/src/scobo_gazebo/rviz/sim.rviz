@@ -33,6 +33,10 @@ Visualization Manager:
         All Enabled: false
         base_footprint:
           Value: true
+        thermal_link:
+          Value: true
+        camera_link:
+          Value: true
         odom:
           Value: true
       Marker Scale: 0.5
@@ -127,6 +131,28 @@ Visualization Manager:
       Color: 0; 255; 0
       Alpha: 1
       Decay Time: 0
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Name: Webcam
+      Enabled: true
+      Topic:
+        Value: /camera/image_raw
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Normalize Range: true
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Name: Thermal
+      Enabled: true
+      Topic:
+        Value: /thermal/image
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Normalize Range: true
       Value: true
   Enabled: true
   Global Options:

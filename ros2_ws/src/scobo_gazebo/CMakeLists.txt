@@ -14,6 +14,12 @@ ament_target_dependencies(range_relay rclcpp sensor_msgs)
 
 install(TARGETS range_relay DESTINATION lib/${PROJECT_NAME})
 
+# fake sensors and dispenser for the sim
+install(PROGRAMS scripts/fake_thermal.py DESTINATION lib/${PROJECT_NAME} RENAME fake_thermal)
+install(PROGRAMS scripts/fake_pulse_oximeter.py DESTINATION lib/${PROJECT_NAME} RENAME fake_pulse_oximeter)
+install(PROGRAMS scripts/fake_dispenser.py DESTINATION lib/${PROJECT_NAME} RENAME fake_dispenser)
+install(FILES scripts/sim_patients.py DESTINATION lib/${PROJECT_NAME})
+
 install(
   DIRECTORY config launch models rviz urdf worlds
   DESTINATION share/${PROJECT_NAME}

@@ -69,7 +69,8 @@ bt_navigator:
     robot_base_frame: base_footprint
     odom_topic: /odometry/filtered
     bt_loop_duration: 10
-    default_server_timeout: 20
+    # ms to wait for the planner or controller to accept a request
+    default_server_timeout: 100
     # the tree comes from navigation.launch.py: replan when the path is blocked,
     # recover with clear costmaps, spin, wait and back up
     plugin_lib_names:

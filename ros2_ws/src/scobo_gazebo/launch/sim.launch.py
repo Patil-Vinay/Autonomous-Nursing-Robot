@@ -85,6 +85,12 @@ def generate_launch_description():
         for side in ['rear', 'front']
     ]
 
+    # fake MLX90640, MAX30102 and pill dispenser
+    fakes = [
+        Node(package='scobo_gazebo', executable=name, parameters=[{'use_sim_time': True}])
+        for name in ['fake_thermal', 'fake_pulse_oximeter', 'fake_dispenser']
+    ]
+
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -111,5 +117,6 @@ def generate_launch_description():
         gyro_bias,
         ekf,
         *range_relays,
+        *fakes,
         rviz_node,
     ])

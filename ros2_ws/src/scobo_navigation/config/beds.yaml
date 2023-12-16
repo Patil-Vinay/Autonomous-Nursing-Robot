@@ -1,15 +1,15 @@
 # Bed stops in the map frame of maps/ward.yaml, x and y in metres, yaw in degrees.
-# Beside the head end, left side towards the patient, 0.5 m from the bed rail.
+# 0.5 m from the bed rail, the front turned towards the patient's head.
 
 # between the nurse station and the trolley
 home: {x: -1.4, y: -0.5, yaw: 0.0}
 
 beds:
-  1: {x: 12.5, y: -4.1, yaw: 90.0}
-  2: {x: 9.5, y: -4.1, yaw: 90.0}
-  3: {x: 6.5, y: -4.1, yaw: 90.0}
-  4: {x: 3.5, y: -4.1, yaw: 90.0}
-  5: {x: 3.5, y: 2.1, yaw: 90.0}
-  6: {x: 6.5, y: 2.1, yaw: 90.0}
-  7: {x: 9.5, y: 2.1, yaw: 90.0}
-  8: {x: 12.5, y: 2.1, yaw: 90.0}
+  1: {x: 12.5, y: -3.8, yaw: -140.0}
+  2: {x: 9.5, y: -3.8, yaw: -140.0}
+  3: {x: 6.5, y: -3.8, yaw: -140.0}
+  4: {x: 3.5, y: -3.8, yaw: -140.0}
+  5: {x: 3.5, y: 1.8, yaw: 140.0}
+  6: {x: 6.5, y: 1.8, yaw: 140.0}
+  7: {x: 9.5, y: 1.8, yaw: 140.0}
+  8: {x: 12.5, y: 1.8, yaw: 140.0}

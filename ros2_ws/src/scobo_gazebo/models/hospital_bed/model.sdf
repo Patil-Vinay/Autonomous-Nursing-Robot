@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sdf version="1.6">
-  <!-- 2.1 x 1.0 m bed, head end at -x, side rails raised -->
+  <!-- 2.1 x 1.0 m bed, head end at -x, backrest and side rails raised -->
   <model name="hospital_bed">
     <static>true</static>
     <link name="link">
@@ -19,12 +19,26 @@
       </visual>
 
       <collision name="mattress">
-        <pose>0 0 0.53 0 0 0</pose>
-        <geometry><box><size>1.96 0.88 0.16</size></box></geometry>
+        <pose>0.39 0 0.53 0 0 0</pose>
+        <geometry><box><size>1.18 0.88 0.16</size></box></geometry>
       </collision>
       <visual name="mattress">
-        <pose>0 0 0.53 0 0 0</pose>
-        <geometry><box><size>1.96 0.88 0.16</size></box></geometry>
+        <pose>0.39 0 0.53 0 0 0</pose>
+        <geometry><box><size>1.18 0.88 0.16</size></box></geometry>
+        <material>
+          <ambient>0.8 0.88 0.95 1</ambient>
+          <diffuse>0.8 0.88 0.95 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- head section raised 25 deg, hinged at the top of the mattress at x -0.2 -->
+      <collision name="backrest">
+        <pose>-0.587 0 0.702 0 0.4363 0</pose>
+        <geometry><box><size>0.78 0.88 0.16</size></box></geometry>
+      </collision>
+      <visual name="backrest">
+        <pose>-0.587 0 0.702 0 0.4363 0</pose>
+        <geometry><box><size>0.78 0.88 0.16</size></box></geometry>
         <material>
           <ambient>0.8 0.88 0.95 1</ambient>
           <diffuse>0.8 0.88 0.95 1</diffuse>
@@ -36,14 +50,6 @@
         <material>
           <ambient>0.35 0.55 0.75 1</ambient>
           <diffuse>0.35 0.55 0.75 1</diffuse>
-        </material>
-      </visual>
-      <visual name="pillow">
-        <pose>-0.78 0 0.65 0 0 0</pose>
-        <geometry><box><size>0.35 0.6 0.08</size></box></geometry>
-        <material>
-          <ambient>0.95 0.95 0.95 1</ambient>
-          <diffuse>0.95 0.95 0.95 1</diffuse>
         </material>
       </visual>
 

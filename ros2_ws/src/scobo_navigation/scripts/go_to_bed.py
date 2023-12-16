@@ -9,11 +9,13 @@ In the sim add --ros-args -p use_sim_time:=true
 import math
 import os
 import sys
+import time
 
 import rclpy
 import yaml
 from ament_index_python.packages import get_package_share_directory
 from geometry_msgs.msg import PoseStamped
+from lifecycle_msgs.srv import GetState
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 from rclpy.utilities import remove_ros_args
 
@@ -37,6 +39,21 @@ def to_pose_stamped(nav, pose):
     msg.pose.orientation.z = math.sin(yaw / 2)
     msg.pose.orientation.w = math.cos(yaw / 2)
     return msg
+
+
+def wait_for_nav2(nav):
+    """Waits until bt_navigator is active, with a timeout on each get_state call."""
+    nav.nav_to_pose_client.wait_for_server()
+    client = nav.create_client(GetState, 'bt_navigator/get_state')
+    for _ in range(30):
+        future = client.call_async(GetState.Request())
+        rclpy.spin_until_future_complete(nav, future, timeout_sec=2.0)
+        if future.done() and future.result().current_state.label == 'active':
+            break
+        time.sleep(1.0)
+    else:
+        nav.warn('No answer from bt_navigator/get_state, going on')
+    nav.destroy_client(client)
 
 
 def drive(nav, name, pose):
@@ -65,9 +82,7 @@ def main():
     targets = beds + ['home'] if args[0] == 'all' else [args[0]]
 
     nav = BasicNavigator()
-    # AMCL starts at home, so waitUntilNav2Active must not send its own initial pose
-    nav.initial_pose_received = True
-    nav.waitUntilNav2Active()
+    wait_for_nav2(nav)
 
     failed = [name for name in targets if not drive(nav, name, poses[name])]
     if len(targets) > 1:

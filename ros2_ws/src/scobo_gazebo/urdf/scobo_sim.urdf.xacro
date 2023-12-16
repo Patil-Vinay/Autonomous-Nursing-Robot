@@ -14,7 +14,7 @@
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
 
-    <!-- held level by pan_tilt_controller -->
+    <!-- moved and held by pan_tilt_controller -->
     <joint name="display_pan_joint">
       <command_interface name="position"/>
       <state_interface name="position">
@@ -236,6 +236,66 @@
 
   <xacro:hc_sr04 side="rear"/>
   <xacro:hc_sr04 side="front"/>
+
+  <!-- USB webcam on the tablet holder -->
+  <gazebo reference="camera_link">
+    <sensor name="webcam" type="camera">
+      <update_rate>15</update_rate>
+      <visualize>false</visualize>
+      <camera>
+        <horizontal_fov>${radians(60)}</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>30</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="webcam" filename="libgazebo_ros_camera.so">
+        <camera_name>camera</camera_name>
+        <frame_name>camera_optical_frame</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- MLX90640 55 x 35 deg as a depth camera, fake_thermal makes the temperatures -->
+  <xacro:property name="thermal_hfov" value="55"/>
+  <xacro:property name="thermal_vfov" value="35"/>
+  <xacro:property name="thermal_render_width" value="320"/>
+
+  <gazebo reference="thermal_link">
+    <sensor name="mlx90640" type="depth">
+      <update_rate>4</update_rate>
+      <visualize>true</visualize>
+      <camera>
+        <horizontal_fov>${radians(thermal_hfov)}</horizontal_fov>
+        <image>
+          <width>${thermal_render_width}</width>
+          <height>${int(round(thermal_render_width * tan(radians(thermal_vfov / 2))
+                                / tan(radians(thermal_hfov / 2))))}</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>10</far>
+        </clip>
+      </camera>
+      <plugin name="mlx90640" filename="libgazebo_ros_camera.so">
+        <camera_name>thermal_sim</camera_name>
+        <frame_name>thermal_optical_frame</frame_name>
+        <min_depth>0.05</min_depth>
+        <max_depth>10</max_depth>
+      </plugin>
+    </sensor>
+  </gazebo>
 
   <gazebo reference="base_footprint">
     <mu1>0.1</mu1>
