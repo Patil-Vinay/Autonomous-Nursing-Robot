@@ -333,7 +333,7 @@
     <link name="${name}_optical_frame"/>
   </xacro:macro>
 
-  <!-- MLX90640 thermal camera under the top beam -->
+  <!-- MLX90640 thermal camera under the top beam, looking forward -->
   <xacro:camera_frames name="thermal" parent="upper_frame" xyz="-0.1778 0.002 1.0775"/>
 
   <!-- webcam on top of the tablet holder, not in the CAD -->

@@ -1,0 +1,22 @@
+task_manager:
+  ros__parameters:
+    database: ~/.ros/scobo/ward.db
+    # tasks due within this many minutes go in one trip
+    window_minutes: 15
+    # a task this late is reported as missed
+    late_limit_minutes: 60
+    # seconds to wait for a steady pulse oximeter reading
+    pulse_timeout: 60.0
+    # seconds to wait for the Collected tap
+    collect_timeout: 120.0
+    # the frames are averaged, then the hottest pixels
+    thermal_frames: 8
+    hot_pixels: 4
+    # forehead skin reads about this much below body temperature
+    skin_offset: 1.0
+    # hottest spot below this means no face was seen, deg C
+    min_skin: 30.0
+    # metres from the goal that count as arrived, checked on the map pose
+    arrive_tolerance: 0.25
+    # visiting order from home, along the north wall and back along the south
+    route: [4, 3, 2, 1, 8, 7, 6, 5]

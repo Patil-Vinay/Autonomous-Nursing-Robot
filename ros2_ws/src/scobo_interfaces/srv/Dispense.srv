@@ -1,0 +1,7 @@
+# Drops pills from one hopper into the bowl
+# hopper 1 to 3
+uint8 hopper
+uint8 count
+---
+bool success
+string message

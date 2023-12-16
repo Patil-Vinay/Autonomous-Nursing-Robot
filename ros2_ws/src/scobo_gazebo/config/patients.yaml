@@ -1,0 +1,21 @@
+# Simulated patients for the fake sensors, patient_<bed> in ward.world.
+# temperature is the body temperature in deg C.
+
+ambient: 24.0
+clothing: 29.0
+skin_offset: 1.0
+
+# head centre in the patient model's frame, metres
+models:
+  patient_male: {head: [-0.64, 0.0, 1.05]}
+  patient_female: {head: [-0.51, 0.0, 0.98]}
+
+# bed 6 is empty
+patients:
+  1: {model: patient_male, heart_rate: 72, spo2: 97, temperature: 36.8}
+  2: {model: patient_female, heart_rate: 88, spo2: 95, temperature: 37.1}
+  3: {model: patient_male, heart_rate: 104, spo2: 96, temperature: 38.4}
+  4: {model: patient_female, heart_rate: 64, spo2: 98, temperature: 36.5}
+  5: {model: patient_male, heart_rate: 78, spo2: 92, temperature: 36.9}
+  7: {model: patient_female, heart_rate: 70, spo2: 97, temperature: 36.6}
+  8: {model: patient_male, heart_rate: 95, spo2: 94, temperature: 37.6}

@@ -12,18 +12,28 @@
   <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
 
+  <exec_depend>ament_index_python</exec_depend>
   <exec_depend>controller_manager</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>gazebo_msgs</exec_depend>
   <exec_depend>gazebo_plugins</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>gazebo_ros2_control</exec_depend>
   <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>joint_trajectory_controller</exec_depend>
   <exec_depend>launch_ros</exec_depend>
-  <exec_depend>position_controllers</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>rclpy</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>scobo_description</exec_depend>
+  <exec_depend>scobo_interfaces</exec_depend>
   <exec_depend>scobo_navigation</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
   <exec_depend>xacro</exec_depend>
 
   <export>

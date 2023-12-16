@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <!-- male patient sitting half up, placed with the same pose as its bed -->
+  <model name="patient_male">
+    <static>true</static>
+    <link name="link">
+      <!-- lifts the mesh onto the hospital_bed mattress -->
+      <pose>0 0 0.05 0 0 0</pose>
+      <visual name="patient">
+        <geometry>
+          <mesh><uri>model://patient_male/meshes/patient_male.obj</uri></mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

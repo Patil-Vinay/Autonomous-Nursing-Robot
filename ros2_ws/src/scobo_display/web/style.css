@@ -1,0 +1,45 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  background: #f4f7fb;
+  color: #1c2b3a;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 5vw;
+}
+
+h1 {
+  font-size: 8vh;
+  margin: 0 0 3vh;
+}
+
+p {
+  font-size: 5vh;
+  margin: 0 0 5vh;
+}
+
+button {
+  font-size: 5vh;
+  padding: 2vh 6vw;
+  margin: 0 1vw;
+  border: none;
+  border-radius: 2vh;
+  background: #1f7a4d;
+  color: white;
+}
+
+footer {
+  font-size: 2vh;
+  padding: 1vh 2vw;
+  color: #6b7a89;
+}

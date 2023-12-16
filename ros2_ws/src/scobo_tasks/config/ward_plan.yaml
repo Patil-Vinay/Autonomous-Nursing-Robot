@@ -1,0 +1,21 @@
+# Ward plan for the sim, sent with: ros2 run scobo_tasks send_plan
+# Tasks: bed 0 means every occupied bed (a round). time is local HH:MM in quotes.
+# daily: true repeats every day, false runs once today.
+# hopper 1 to 3 and count give the pills, leave them out for checks only.
+
+beds:
+  1: occupied
+  2: occupied
+  3: occupied
+  4: occupied
+  5: occupied
+  6: discharged
+  7: occupied
+  8: occupied
+
+tasks:
+  - {id: morning-round, bed: 0, time: "08:00", daily: true, temperature: true, pulse_oximeter: true}
+  - {id: evening-round, bed: 0, time: "20:00", daily: true, temperature: true, pulse_oximeter: true}
+  - {id: bed4-afternoon-pills, bed: 4, time: "15:00", daily: true, hopper: 2, count: 1}
+  - {id: bed2-afternoon-pills, bed: 2, time: "15:10", daily: true, hopper: 1, count: 2}
+  - {id: bed3-fever-check, bed: 3, time: "16:00", daily: false, temperature: true}

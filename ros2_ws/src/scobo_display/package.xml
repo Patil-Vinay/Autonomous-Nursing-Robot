@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>scobo_display</name>
+  <version>0.1.0</version>
+  <description>Web page shown on the SCOBO tablet, connected through rosbridge</description>
+  <maintainer email="77240925+Patil-Vinay@users.noreply.github.com">Vinay Patil</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>rosbridge_server</exec_depend>
+  <exec_depend>scobo_interfaces</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
