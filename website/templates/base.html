@@ -1,0 +1,54 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SCOBO{% endblock %} · SCOBO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/scobo.css' %}">
+</head>
+<body>
+{% block body %}
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">{% include 'logo.html' %}<div><b>SCOBO</b><small>Ward assistant</small></div></div>
+
+    <nav class="nav" aria-label="Main">
+      <a href="{% url 'dashboard' %}" class="{% if page == 'dashboard' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="9" rx="2"/><rect x="13.5" y="3" width="7.5" height="5" rx="2"/><rect x="13.5" y="11" width="7.5" height="10" rx="2"/><rect x="3" y="15" width="7.5" height="6" rx="2"/></svg>Dashboard</a>
+      <a href="{% url 'robot' %}" class="{% if page == 'robot' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Robot</a>
+      {% if is_nurse %}
+      <a href="{% url 'ward' %}" class="{% if page == 'ward' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="2"/></svg>Ward</a>
+      <a href="{% url 'schedule' %}" class="{% if page == 'schedule' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Schedule</a>
+      {% endif %}
+      <a href="{% url 'patients' %}" class="{% if page == 'patients' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2 .7 3.5 2.6 3.5 5.8"/></svg>Patients</a>
+      <a href="{% url 'visits' %}" class="{% if page == 'visits' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg>Visits</a>
+      <a href="{% url 'call' %}" class="{% if page == 'call' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/></svg>Video call</a>
+    </nav>
+
+    <div class="user">
+      <span class="avatar">{% firstof user.first_name|first user.username|first %}{{ user.last_name|first }}</span>
+      <div class="who">
+        <span>{% firstof user.get_full_name user.username %}</span>
+        <span>{% if is_nurse and is_doctor %}Admin{% elif is_nurse %}Nurse{% else %}Doctor{% endif %}</span>
+      </div>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+        <button type="submit" aria-label="Log out"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l-4-4 4-4M6 12h10"/></svg></button>
+      </form>
+    </div>
+  </aside>
+
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}
+</body>
+</html>

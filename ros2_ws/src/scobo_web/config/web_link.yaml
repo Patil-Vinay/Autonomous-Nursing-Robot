@@ -1,0 +1,20 @@
+web_link:
+  ros__parameters:
+    # the ward website
+    site_url: http://localhost:8000
+    # must match SCOBO_ROBOT_TOKEN on the site, set your own on a real robot
+    token: dev-robot-token
+    # the task manager's file
+    database: ~/.ros/scobo/ward.db
+    # seconds between asking for the plan and sending new visits
+    plan_period: 5.0
+    visit_period: 10.0
+    timeout: 5.0
+    # visits sent per request
+    batch: 100
+
+robot_pose:
+  ros__parameters:
+    map_frame: map
+    base_frame: base_footprint
+    rate: 5.0

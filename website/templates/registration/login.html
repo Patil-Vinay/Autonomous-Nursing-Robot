@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Sign in{% endblock %}
+{% block body %}
+<div class="login">
+  <section class="login-intro">
+    <div class="brand">{% include 'logo.html' %}<b>SCOBO</b></div>
+    <div>
+      <h1>The ward robot that does the rounds with you.</h1>
+      <p>Plan checks and medicine, follow the robot on the ward map and read every reading it takes.</p>
+      <ul>
+        <li>Temperature, pulse and SpO2 at the bedside</li>
+        <li>Medicine dropped at the right bed, on time</li>
+        <li>Video calls with patients through the robot</li>
+      </ul>
+    </div>
+    <small>General ward · staff only</small>
+  </section>
+
+  <main class="login-form">
+    <form method="post">
+      {% csrf_token %}
+      <h2>Sign in</h2>
+      <p class="muted">Use the account the ward admin gave you.</p>
+      {% if form.errors %}<div class="errors">Wrong username or password.</div>{% endif %}
+      <div class="field">
+        <label for="id_username">Username</label>
+        <input id="id_username" name="username" type="text" autocomplete="username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="id_password">Password</label>
+        <input id="id_password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="btn primary" type="submit">Sign in</button>
+    </form>
+  </main>
+</div>
+{% endblock %}
