@@ -9,3 +9,7 @@ __pycache__/
 
 # Screen recordings
 docs/videos/
+
+# Website
+website/db.sqlite3
+website/staticfiles/

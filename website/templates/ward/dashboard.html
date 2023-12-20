@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <h1>Hello, {% firstof user.first_name user.username %}</h1>
+    <p>{% now "l j F, H:i" %}</p>
+  </div>
+</header>
+
+<section class="tiles" aria-label="Today in numbers">
+  <div class="tile">
+    <span class="label">Beds occupied</span>
+    <span class="value">{{ occupied }} <small>of {{ beds|length }}</small></span>
+  </div>
+  <div class="tile">
+    <span class="label">Tasks in the plan</span>
+    <span class="value">{{ tasks_today }}</span>
+  </div>
+  <div class="tile">
+    <span class="label">Visits today</span>
+    <span class="value">{{ visits_today }}</span>
+  </div>
+  <div class="tile{% if problems_today %} bad{% endif %}">
+    <span class="label">Problems today</span>
+    <span class="value">{{ problems_today }}</span>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Ward</h2>
+  <p class="muted">Beds as they stand in the room.</p>
+  <div class="beds">
+    {% for bed in beds %}
+      {% with patient=bed.patient %}
+      {% if patient %}
+      <article class="bed">
+        <div class="bed-head"><span>BED {{ bed.number }}</span><span class="chip ok">Occupied</span></div>
+        <div class="person">
+          <span class="avatar">{{ patient.initials }}</span>
+          <span><b>{{ patient.name }}</b><small>{{ patient.get_sex_display }}, {{ patient.age }} · since {{ patient.admitted|date:"j M" }}</small></span>
+        </div>
+      </article>
+      {% else %}
+      <article class="bed free">
+        <div class="bed-head"><span>BED {{ bed.number }}</span><span class="chip off">Free</span></div>
+        <span class="muted">The robot skips this bed.</span>
+      </article>
+      {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
