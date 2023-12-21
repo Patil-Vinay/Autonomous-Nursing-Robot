@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Patients{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <h1>Patients</h1>
+    <p>Latest readings from the robot. Open a patient for the full record.</p>
+  </div>
+</header>
+
+<section class="beds" aria-label="Patients on the ward">
+  {% for row in current %}
+  <a class="bed link" href="{% url 'patient' row.patient.pk %}">
+    <div class="bed-head"><span>BED {{ row.bed.number }}</span></div>
+    <div class="person">
+      <span class="avatar">{{ row.patient.initials }}</span>
+      <span><b>{{ row.patient.name }}</b><small>{{ row.patient.get_sex_display }}, {{ row.patient.age }} · since {{ row.patient.admitted|date:"j M" }}</small></span>
+    </div>
+    {% include 'ward/_vitals.html' with vitals=row.vitals %}
+  </a>
+  {% empty %}
+  <p class="muted">No patients on the ward.</p>
+  {% endfor %}
+</section>
+
+{% if past %}
+<section class="card stack">
+  <h2>Discharged</h2>
+  <table class="table">
+    <thead><tr><th>Name</th><th>Bed</th><th>Admitted</th><th>Discharged</th></tr></thead>
+    <tbody>
+      {% for p in past %}
+      <tr><td><a href="{% url 'patient' p.pk %}">{{ p.name }}</a></td><td>{{ p.bed_id }}</td><td>{{ p.admitted|date:"j M Y" }}</td><td>{{ p.discharged|date:"j M Y" }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}

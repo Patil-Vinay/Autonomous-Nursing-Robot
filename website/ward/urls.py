@@ -13,9 +13,10 @@ urlpatterns = [
     path('schedule/<int:pk>/delete/', views.task_delete, name='task_delete'),
     path('schedule/give-now/', views.give_now, name='give_now'),
     path('schedule/hoppers/', views.hoppers, name='hoppers'),
-    path('patients/', views.later, {'title': 'Patients'}, name='patients'),
-    path('visits/', views.later, {'title': 'Visits'}, name='visits'),
+    path('patients/', views.patients, name='patients'),
+    path('patients/<int:pk>/', views.patient, name='patient'),
+    path('visits/', views.visits, name='visits'),
     path('api/plan/', api.plan, name='api_plan'),
     path('api/visits/', api.visits, name='api_visits'),
-    path('call/', views.later, {'title': 'Video call'}, name='call'),
+    path('call/', views.call, name='call'),
 ]

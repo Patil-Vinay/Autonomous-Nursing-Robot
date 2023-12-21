@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Video call{% endblock %}
+{% block content %}
+<div id="call-page" class="stack" data-ws="{{ robot_ws }}" data-name="{{ caller }}">
+  <header class="page-head">
+    <div>
+      <h1>Video call</h1>
+      <p>Talk to the patient through the robot's display. The robot must be at the bed.</p>
+    </div>
+    <span id="link" class="chip off">Connecting</span>
+  </header>
+
+  <section class="card stack">
+    <div class="video-box">
+      <video id="remote" autoplay playsinline></video>
+      <video id="local" autoplay playsinline muted></video>
+      <p id="state" class="video-state">Not in a call</p>
+    </div>
+    <div class="row">
+      <button type="button" class="btn primary" id="start" disabled>Call the robot</button>
+      <button type="button" class="btn stop inline" id="hang" disabled>Hang up</button>
+    </div>
+  </section>
+</div>
+<script src="{% static 'js/roslib.min.js' %}"></script>
+<script src="{% static 'js/call.js' %}"></script>
+{% endblock %}

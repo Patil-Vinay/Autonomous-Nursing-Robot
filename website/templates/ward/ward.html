@@ -18,20 +18,7 @@
       <span class="avatar">{{ patient.initials }}</span>
       <span><b>{{ patient.name }}</b><small>{{ patient.get_sex_display }}, {{ patient.age }} · since {{ patient.admitted|date:"j M" }}</small></span>
     </div>
-    <div class="vitals">
-      {% for v in card.vitals %}
-      <div class="vital{% if v.out %} out{% endif %}">
-        <span class="label">{{ v.label }}</span>
-        {% if v.value is not None %}
-        <b>{{ v.value|floatformat:v.decimals }}<small>{{ v.unit }}</small></b>
-        <span class="when">{{ v.time|date:"j M H:i" }}</span>
-        {% else %}
-        <b class="none">-</b>
-        <span class="when">No reading</span>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </div>
+    {% include 'ward/_vitals.html' with vitals=card.vitals %}
     {% if patient.notes %}<p class="notes">{{ patient.notes }}</p>{% endif %}
     <form method="post" action="{% url 'discharge' bed.number %}"
           onsubmit="return confirm('Discharge {{ patient.name|escapejs }} from bed {{ bed.number }}?')">

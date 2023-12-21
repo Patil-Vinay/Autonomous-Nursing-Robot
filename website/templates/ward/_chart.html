@@ -1,0 +1,18 @@
+<figure class="chart">
+  <figcaption>
+    <span>{{ c.label }}</span>
+    {% if not c.empty %}<b class="{% if c.last.out %}out{% endif %}">{{ c.last.value|floatformat:c.decimals }} {{ c.unit }}</b>{% endif %}
+  </figcaption>
+  {% if c.empty %}
+  <p class="muted">No readings yet.</p>
+  {% else %}
+  <svg viewBox="0 0 {{ c.width }} {{ c.height }}" role="img" aria-label="{{ c.label }} over the last visits">
+    <rect class="band" x="0" y="{{ c.band_top }}" width="{{ c.width }}" height="{{ c.band_height }}"/>
+    <polyline class="line" points="{{ c.line }}"/>
+    {% for d in c.dots %}
+    <circle class="{% if d.out %}out{% endif %}" cx="{{ d.x }}" cy="{{ d.y }}" r="4"><title>{{ d.time|date:"j M H:i" }}: {{ d.value|floatformat:c.decimals }} {{ c.unit }}</title></circle>
+    {% endfor %}
+  </svg>
+  <p class="muted small">Shaded: normal range {{ c.low }} to {{ c.high }} {{ c.unit }}</p>
+  {% endif %}
+</figure>
