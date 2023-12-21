@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{{ person.name }}{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div class="person big">
+    <span class="avatar">{{ person.initials }}</span>
+    <span>
+      <h1>{{ person.name }}</h1>
+      <p>{{ person.get_sex_display }}, {{ person.age }} · bed {{ person.bed_id }} · admitted {{ person.admitted|date:"j M Y" }}{% if person.discharged %} · discharged {{ person.discharged|date:"j M Y" }}{% endif %}</p>
+    </span>
+  </div>
+  <a class="btn" href="{% url 'patients' %}">All patients</a>
+</header>
+
+{% if person.notes %}<section class="card"><h2>Notes</h2><p>{{ person.notes|linebreaksbr }}</p></section>{% endif %}
+
+<section class="card stack">
+  <h2>Readings</h2>
+  <div class="charts">
+    {% for c in charts %}{% include 'ward/_chart.html' %}{% endfor %}
+  </div>
+</section>
+
+<section class="card stack">
+  <h2>Visits</h2>
+  {% if visits %}
+  <div class="table-box">
+    <table class="table">
+      <thead><tr><th>Time</th><th>Temp</th><th>Pulse</th><th>SpO2</th><th>Medicine</th><th>Result</th></tr></thead>
+      <tbody>
+        {% for v in visits %}
+        <tr>
+          <td>{{ v.time|date:"j M H:i" }}</td>
+          <td>{% if v.temperature is not None %}{{ v.temperature|floatformat:1 }} °C{% else %}-{% endif %}</td>
+          <td>{% if v.heart_rate is not None %}{{ v.heart_rate|floatformat:0 }}{% else %}-{% endif %}</td>
+          <td>{% if v.spo2 is not None %}{{ v.spo2|floatformat:0 }} %{% else %}-{% endif %}</td>
+          <td>{% if v.pills %}{{ v.pills }} pill{{ v.pills|pluralize }}, {% if v.collected %}collected{% else %}not collected{% endif %}{% else %}-{% endif %}</td>
+          <td><span class="chip {% if v.ok %}ok{% else %}warn{% endif %}">{{ v.status|capfirst }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">The robot has not visited this patient yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

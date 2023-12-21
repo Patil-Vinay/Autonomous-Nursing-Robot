@@ -12,8 +12,17 @@
     <p id="text">Nursing assistant</p>
     <div id="buttons"></div>
   </main>
+  <section id="call" hidden>
+    <video id="remote" autoplay playsinline></video>
+    <video id="local" autoplay playsinline muted></video>
+    <div class="call-bar">
+      <p id="call-text"></p>
+      <div id="call-buttons"></div>
+    </div>
+  </section>
   <footer id="status">Connecting</footer>
   <script src="roslib.min.js"></script>
   <script src="display.js"></script>
+  <script src="call.js"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST
 
 from ward.forms import AdmitForm, GiveNowForm, TaskForm
 from ward.layout import layout
-from ward.models import Bed, Hopper, Task, Visit
+from ward.models import Bed, Hopper, Patient, Task, Visit
 from ward.roles import nurse_required, staff_required
 
 # beds as they stand in the room, as on the robot's map: 5 to 8 on top, 4 to 1 below
@@ -261,13 +261,89 @@ def hoppers(request):
     return redirect('schedule')
 
 
-# pages not built yet
+# patient records and the visits log, for doctors and nurses
 
-def _later(request, title):
-    context = {'page': request.resolver_match.url_name, 'title': title}
-    return render(request, 'ward/later.html', context)
+def chart(visits, field, unit, decimals, low, high):
+    """A small line chart of one reading as SVG coordinates, the normal range shaded."""
+    points = [(v.time, getattr(v, field)) for v in visits if getattr(v, field) is not None]
+    width, height, pad = 600, 150, 14
+    if not points:
+        return {'empty': True, 'unit': unit}
+    values = [value for _, value in points]
+    top = max(values + [high]) + (high - low) * 0.15
+    bottom = min(values + [low]) - (high - low) * 0.15
+
+    def y(value):
+        return round(pad + (top - value) / (top - bottom) * (height - 2 * pad), 1)
+
+    step = (width - 2 * pad) / max(len(points) - 1, 1)
+    dots = [{'x': round(pad + i * step, 1), 'y': y(value), 'value': value, 'time': time,
+             'out': not low <= value <= high} for i, (time, value) in enumerate(points)]
+    return {
+        'empty': False, 'unit': unit, 'decimals': decimals, 'width': width, 'height': height,
+        'line': ' '.join(f"{d['x']},{d['y']}" for d in dots), 'dots': dots,
+        'band_top': y(high), 'band_height': round(y(low) - y(high), 1),
+        'low': low, 'high': high, 'last': dots[-1],
+    }
 
 
 @staff_required
-def later(request, title):
-    return _later(request, title)
+def patients(request):
+    current = [{'patient': b.patient, 'bed': b, 'vitals': latest_vitals(b.patient)}
+               for b in room_beds() if b.patient]
+    past = Patient.objects.filter(discharged__isnull=False).order_by('-discharged')[:20]
+    return render(request, 'ward/patients.html', {
+        'page': 'patients', 'current': current, 'past': past})
+
+
+@staff_required
+def patient(request, pk):
+    person = get_object_or_404(Patient, pk=pk)
+    visits = list(Visit.objects.filter(patient=person).order_by('time'))
+    charts = [dict(chart(visits[-30:], field, unit, decimals, low, high), label=label)
+              for field, label, unit, decimals, low, high in VITALS]
+    return render(request, 'ward/patient.html', {
+        'page': 'patients', 'person': person, 'charts': charts,
+        'visits': list(reversed(visits)), 'vitals': latest_vitals(person)})
+
+
+@staff_required
+def visits(request):
+    """One day of visits, grouped by trip. Tasks the robot could not do have no trip."""
+    # days with visits, in ward local time
+    days = [d.date() for d in Visit.objects.datetimes('time', 'day', order='DESC')]
+    try:
+        day = datetime.strptime(request.GET.get('day', ''), '%Y-%m-%d').date()
+    except ValueError:
+        day = days[0] if days else timezone.localdate()
+
+    rows = Visit.objects.filter(time__date=day).select_related('patient').order_by('time')
+    bed = request.GET.get('bed', '')
+    if bed.isdigit():
+        rows = rows.filter(bed=int(bed))
+    problems = request.GET.get('problems') == '1'
+    if problems:
+        rows = rows.exclude(status='done')
+
+    trips = []
+    for visit in rows:
+        if not trips or trips[-1]['trip'] != visit.trip:
+            trips.append({'trip': visit.trip, 'start': visit.time, 'visits': []})
+        trips[-1]['visits'].append(visit)
+
+    older = [d for d in days if d < day]
+    newer = [d for d in days if d > day]
+    return render(request, 'ward/visits.html', {
+        'page': 'visits', 'day': day, 'trips': trips, 'bed': bed, 'problems': problems,
+        'older': older[0] if older else None, 'newer': newer[-1] if newer else None,
+        'beds': range(1, 9), 'count': rows.count(),
+    })
+
+
+# video call with the robot's display
+
+@staff_required
+def call(request):
+    return render(request, 'ward/call.html', {
+        'page': 'call', 'robot_ws': settings.ROBOT_WS,
+        'caller': request.user.get_full_name() or request.user.username})
