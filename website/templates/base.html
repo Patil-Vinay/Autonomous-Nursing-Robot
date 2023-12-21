@@ -46,6 +46,9 @@
   </aside>
 
   <main class="content">
+    {% for message in messages %}
+    <p class="flash {{ message.tags }}" role="status">{{ message }}</p>
+    {% endfor %}
     {% block content %}{% endblock %}
   </main>
 </div>

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Ward{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <h1>Ward</h1>
+    <p>Beds as they stand in the room. The robot only visits beds with a patient.</p>
+  </div>
+</header>
+
+<section class="beds" aria-label="Beds">
+  {% for card in cards %}
+  {% with bed=card.bed patient=card.patient %}
+  {% if patient %}
+  <article class="bed">
+    <div class="bed-head"><span>BED {{ bed.number }}</span><span class="chip ok">Occupied</span></div>
+    <div class="person">
+      <span class="avatar">{{ patient.initials }}</span>
+      <span><b>{{ patient.name }}</b><small>{{ patient.get_sex_display }}, {{ patient.age }} · since {{ patient.admitted|date:"j M" }}</small></span>
+    </div>
+    <div class="vitals">
+      {% for v in card.vitals %}
+      <div class="vital{% if v.out %} out{% endif %}">
+        <span class="label">{{ v.label }}</span>
+        {% if v.value is not None %}
+        <b>{{ v.value|floatformat:v.decimals }}<small>{{ v.unit }}</small></b>
+        <span class="when">{{ v.time|date:"j M H:i" }}</span>
+        {% else %}
+        <b class="none">-</b>
+        <span class="when">No reading</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% if patient.notes %}<p class="notes">{{ patient.notes }}</p>{% endif %}
+    <form method="post" action="{% url 'discharge' bed.number %}"
+          onsubmit="return confirm('Discharge {{ patient.name|escapejs }} from bed {{ bed.number }}?')">
+      {% csrf_token %}
+      <button type="submit" class="btn small">Discharge</button>
+    </form>
+  </article>
+  {% else %}
+  <article class="bed free{% if admit_bed == bed %} picked{% endif %}">
+    <div class="bed-head"><span>BED {{ bed.number }}</span><span class="chip off">Free</span></div>
+    <span class="muted">The robot skips this bed.</span>
+    <a class="btn small" href="?admit={{ bed.number }}">Admit patient</a>
+  </article>
+  {% endif %}
+  {% endwith %}
+  {% endfor %}
+</section>
+
+{% if admit_bed %}
+<aside class="sheet" aria-label="Admit a patient">
+  <form method="post" action="{% url 'admit' admit_bed.number %}" class="stack">
+    {% csrf_token %}
+    <div class="sheet-head">
+      <h2>Admit to bed {{ admit_bed.number }}</h2>
+      <a href="{% url 'ward' %}" class="close" aria-label="Close">&times;</a>
+    </div>
+    {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+    {% for field in form %}
+    <div class="field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<span class="field-error">{{ field.errors|join:" " }}</span>{% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn primary">Admit</button>
+  </form>
+</aside>
+{% endif %}
+{% endblock %}
