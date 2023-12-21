@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Schedule{% endblock %}
+{% block content %}
+<header class="page-head">
+  <div>
+    <h1>Schedule</h1>
+    <p>Tasks due within 15 minutes of each other go in one trip. Changes reach the robot within a few seconds.</p>
+  </div>
+</header>
+
+<div class="columns">
+  <div class="stack">
+    <section class="card">
+      <h2>Today's trips</h2>
+      {% for trip in trips %}
+      <div class="trip">
+        <div class="trip-time">{{ trip.start|time:"H:i" }}</div>
+        <ul class="tasks">
+          {% for task in trip.tasks %}
+          <li class="task">
+            <span class="task-time">{{ task.time|time:"H:i" }}</span>
+            <span class="task-what">
+              <b>{% if task.bed %}Bed {{ task.bed }}{% else %}All occupied beds{% endif %}</b>
+              <small>{{ task.label }}</small>
+            </span>
+            <span class="chip {% if task.daily %}info{% else %}off{% endif %}">{% if task.daily %}Every day{% else %}Once{% endif %}</span>
+            {% if task.state %}
+            <span class="chip {% if task.state.ok %}ok{% else %}warn{% endif %}">{% if task.state.ok %}Done {{ task.state.time|time:"H:i" }}{% else %}{{ task.state.status|capfirst }}{% endif %}</span>
+            {% endif %}
+            <form method="post" action="{% url 'task_delete' task.pk %}"
+                  onsubmit="return confirm('Remove this task?')">
+              {% csrf_token %}
+              <button type="submit" class="icon-btn" aria-label="Remove task">&times;</button>
+            </form>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% empty %}
+      <p class="muted">No tasks yet.</p>
+      {% endfor %}
+    </section>
+
+    <section class="card">
+      <h2>New task</h2>
+      <form method="post" action="{% url 'task_add' %}" class="stack">
+        {% csrf_token %}
+        {% if task_form.errors %}<div class="errors">{% for field, errors in task_form.errors.items %}{{ errors|join:" " }} {% endfor %}</div>{% endif %}
+        <div class="form-row">
+          <div class="field"><label for="{{ task_form.bed.id_for_label }}">Bed</label>{{ task_form.bed }}</div>
+          <div class="field"><label for="{{ task_form.time.id_for_label }}">Time</label>{{ task_form.time }}</div>
+          <div class="field"><label for="{{ task_form.daily.id_for_label }}">Repeat</label>{{ task_form.daily }}</div>
+        </div>
+        <div class="checks">
+          <label>{{ task_form.temperature }} Temperature</label>
+          <label>{{ task_form.pulse_oximeter }} Pulse oximeter</label>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="{{ task_form.hopper.id_for_label }}">Medicine</label>{{ task_form.hopper }}</div>
+          <div class="field"><label for="{{ task_form.count.id_for_label }}">Pills</label>{{ task_form.count }}</div>
+        </div>
+        <button type="submit" class="btn primary">Add task</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="stack">
+    <section class="card dark stack">
+      <h2>Give medicine now</h2>
+      <p>The robot takes the pills on its next trip, within a minute when it is at home.</p>
+      <form method="post" action="{% url 'give_now' %}" class="stack">
+        {% csrf_token %}
+        {% if give_form.errors %}<div class="errors">{% for field, errors in give_form.errors.items %}{{ errors|join:" " }} {% endfor %}</div>{% endif %}
+        <div class="field">
+          <label for="{{ give_form.bed.id_for_label }}">Bed</label>
+          <select name="bed" id="{{ give_form.bed.id_for_label }}">
+            {% for n in occupied %}<option value="{{ n }}"{% if give_form.bed.value|stringformat:"s" == n|stringformat:"s" %} selected{% endif %}>Bed {{ n }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="field"><label for="{{ give_form.hopper.id_for_label }}">Medicine</label>{{ give_form.hopper }}</div>
+        <div class="field"><label for="{{ give_form.count.id_for_label }}">Pills</label>{{ give_form.count }}</div>
+        <button type="submit" class="btn primary">Send the robot</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Pill hoppers</h2>
+      <p class="muted">What is loaded in each hopper. Leave it empty when the hopper is empty.</p>
+      <form method="post" action="{% url 'hoppers' %}" class="stack">
+        {% csrf_token %}
+        {% for hopper in hoppers %}
+        <div class="field">
+          <label for="hopper_{{ hopper.number }}">Hopper {{ hopper.number }}</label>
+          <input id="hopper_{{ hopper.number }}" name="hopper_{{ hopper.number }}" value="{{ hopper.medicine }}" maxlength="100">
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn">Save names</button>
+      </form>
+    </section>
+  </div>
+</div>
+{% endblock %}

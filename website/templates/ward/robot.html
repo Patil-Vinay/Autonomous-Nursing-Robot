@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Robot{% endblock %}
+{% block content %}
+<div id="robot-page" class="stack" data-ws="{{ robot_ws }}">
+  <header class="page-head">
+    <div>
+      <h1>Robot</h1>
+      <p>Live from the robot.</p>
+    </div>
+    <span id="link" class="chip off">Connecting</span>
+  </header>
+
+  <section class="tiles" aria-label="Robot now">
+    <div class="tile">
+      <span class="label">Doing</span>
+      <span class="value small" id="status">-</span>
+    </div>
+    <div class="tile">
+      <span class="label">Position on the map</span>
+      <span class="value small" id="pose">-</span>
+    </div>
+    <div class="tile">
+      <span class="label">Next task</span>
+      {% with task=up_next.0 %}
+      <span class="value small">{% if task %}{{ task.time|time:"H:i" }}{% else %}-{% endif %}</span>
+      <span class="note">{% if task %}{% if task.bed %}Bed {{ task.bed }}{% else %}All occupied beds{% endif %}, {{ task.label }}{% else %}Nothing more today{% endif %}</span>
+      {% endwith %}
+    </div>
+    <div class="tile">
+      <span class="label">Last visit</span>
+      <span class="value small">{% if last_visit %}Bed {{ last_visit.bed }}{% else %}-{% endif %}</span>
+      <span class="note">{% if last_visit %}{{ last_visit.time|date:"j M H:i" }}, {{ last_visit.status }}{% endif %}</span>
+    </div>
+  </section>
+
+  <div class="columns">
+    <section class="card stack">
+      <div class="card-head">
+        <h2>Ward map</h2>
+        <div class="switch" role="group" aria-label="Map view">
+          <button type="button" data-view="plan" class="on">Floor plan</button>
+          <button type="button" data-view="lidar">Lidar map</button>
+        </div>
+      </div>
+      <div class="map-box"><canvas id="map" aria-label="Map of the ward with the robot"></canvas></div>
+      <p class="legend">
+        <span><i class="mark robot-mark"></i>Robot</span>
+        <span><i class="mark path-mark"></i>Planned path</span>
+        <span><i class="mark stop-mark"></i>Bed stop</span>
+        <span><i class="mark alert-mark"></i>Needs a look</span>
+        <span><i class="mark free-mark"></i>Free bed</span>
+      </p>
+    </section>
+
+    <div class="stack">
+      <section class="card stack">
+        <h2>Send the robot</h2>
+        {% if is_nurse %}
+        <div class="bed-buttons">
+          {% for bed in beds %}
+          <button type="button" class="btn" data-bed="{{ bed.number }}">Bed {{ bed.number }}</button>
+          {% endfor %}
+        </div>
+        <div class="row">
+          <button type="button" class="btn" data-bed="0">Home</button>
+          <button type="button" class="btn" id="run-now">Check all beds</button>
+        </div>
+        <button type="button" class="btn stop" id="stop">Stop</button>
+        <p id="reply" class="muted" role="status"></p>
+        {% else %}
+        <p class="muted">Only nurses can move the robot.</p>
+        {% endif %}
+      </section>
+
+      <section class="card stack">
+        <h2>Up next today</h2>
+        {% for task in up_next %}
+        <div class="task">
+          <span class="task-time">{{ task.time|time:"H:i" }}</span>
+          <span class="task-what"><b>{% if task.bed %}Bed {{ task.bed }}{% else %}All occupied beds{% endif %}</b><small>{{ task.label }}</small></span>
+        </div>
+        {% empty %}
+        <p class="muted">Nothing more today.</p>
+        {% endfor %}
+      </section>
+    </div>
+  </div>
+</div>
+{{ layout|json_script:"ward-layout" }}
+<script src="{% static 'js/roslib.min.js' %}"></script>
+<script src="{% static 'js/robot.js' %}"></script>
+{% endblock %}

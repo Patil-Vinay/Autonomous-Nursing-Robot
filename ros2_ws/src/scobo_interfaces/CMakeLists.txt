@@ -14,6 +14,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/WardPlan.msg"
   "msg/VisitRecord.msg"
   "srv/Dispense.srv"
+  "srv/GoTo.srv"
   DEPENDENCIES std_msgs
 )
 

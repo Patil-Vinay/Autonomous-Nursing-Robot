@@ -1,0 +1,6 @@
+# Sends SCOBO to a bed and leaves it there, or home
+# bed 1 to 8, 0 for home
+uint8 bed
+---
+bool success
+string message

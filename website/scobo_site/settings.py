@@ -1,7 +1,7 @@
 """Settings for the SCOBO ward website.
 
 For the sim everything has a local default. On a real host set SCOBO_SECRET_KEY,
-SCOBO_DEBUG=0, SCOBO_HOSTS and SCOBO_ROBOT_TOKEN.
+SCOBO_DEBUG=0, SCOBO_HOSTS, SCOBO_ROBOT_TOKEN and SCOBO_ROBOT_WS.
 """
 import os
 from pathlib import Path
@@ -13,6 +13,8 @@ DEBUG = os.environ.get('SCOBO_DEBUG', '1') == '1'
 ALLOWED_HOSTS = os.environ.get('SCOBO_HOSTS', 'localhost,127.0.0.1').split(',')
 # the robot's web_link sends this with every API request
 ROBOT_TOKEN = os.environ.get('SCOBO_ROBOT_TOKEN', 'dev-robot-token')
+# the robot's rosbridge, the Robot page connects to it from the browser
+ROBOT_WS = os.environ.get('SCOBO_ROBOT_WS', 'ws://localhost:9090')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
