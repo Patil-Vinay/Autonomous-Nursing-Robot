@@ -1,0 +1,16 @@
+mega_bridge:
+  ros__parameters:
+    port: /dev/ttyACM0
+    # encoder counts per wheel turn, both edges of channel A
+    counts_per_rev: 1000.0
+    # pills in hoppers 1 to 3 at start
+    stock: [30, 30, 30]
+
+mlx90640:
+  ros__parameters:
+    bus: 1
+    # subpages per second, two make a frame. 4 is the most the 100 kHz bus carries
+    refresh_rate: 4.0
+    emissivity: 0.98
+    flip_horizontal: false
+    flip_vertical: false
