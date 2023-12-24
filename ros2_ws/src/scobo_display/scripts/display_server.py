@@ -2,9 +2,10 @@
 
 python3 display_server.py <port> <folder>
 """
-import functools
+import os
 import sys
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+from socketserver import ThreadingMixIn
 
 
 class NoCacheHandler(SimpleHTTPRequestHandler):
@@ -13,10 +14,14 @@ class NoCacheHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
 
+class ThreadingServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
+
+
 def main():
     port, folder = int(sys.argv[1]), sys.argv[2]
-    handler = functools.partial(NoCacheHandler, directory=folder)
-    ThreadingHTTPServer(('', port), handler).serve_forever()
+    os.chdir(folder)
+    ThreadingServer(('', port), NoCacheHandler).serve_forever()
 
 
 if __name__ == '__main__':

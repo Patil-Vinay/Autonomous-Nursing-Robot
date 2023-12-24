@@ -13,8 +13,14 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='false'),
+        DeclareLaunchArgument('site_url', default_value='http://localhost:8000',
+                              description='The ward website'),
+        DeclareLaunchArgument('token', default_value='dev-robot-token',
+                              description='Must match SCOBO_ROBOT_TOKEN on the site'),
         Node(package='scobo_web', executable='web_link', output='screen',
-             parameters=[params, {'use_sim_time': use_sim_time}]),
+             parameters=[params, {'site_url': LaunchConfiguration('site_url'),
+                                  'token': LaunchConfiguration('token'),
+                                  'use_sim_time': use_sim_time}]),
         Node(package='scobo_web', executable='robot_pose', output='screen',
              parameters=[params, {'use_sim_time': use_sim_time}]),
     ])

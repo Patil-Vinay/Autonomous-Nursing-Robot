@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>scobo_bringup</name>
+  <version>0.1.0</version>
+  <description>Launch files for the real SCOBO nursing robot</description>
+  <maintainer email="patilb.vinay@gmail.com">Vinay Patil</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rplidar_ros</exec_depend>
+  <exec_depend>scobo_description</exec_depend>
+  <exec_depend>scobo_hardware</exec_depend>
+  <exec_depend>scobo_navigation</exec_depend>
+  <exec_depend>scobo_tasks</exec_depend>
+  <exec_depend>scobo_web</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
