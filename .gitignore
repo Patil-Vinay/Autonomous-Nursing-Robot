@@ -7,9 +7,6 @@ ros2_ws/log/
 __pycache__/
 *.pyc
 
-# Screen recordings
-docs/videos/
-
 # Website
 website/db.sqlite3
 website/staticfiles/
